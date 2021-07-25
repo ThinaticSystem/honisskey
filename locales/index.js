@@ -25,6 +25,7 @@ const languages = [
 	'it-IT',
 	'ja-JP',
 	'ja-KS',
+	'ja-HN',
 	'kab-KAB',
 	'kn-IN',
 	'ko-KR',
@@ -54,7 +55,7 @@ const clean = (text) => text.replace(new RegExp(String.fromCodePoint(0x08), 'g')
 const locales = languages.reduce((a, c) => (a[c] = yaml.load(clean(fs.readFileSync(new URL(`${c}.yml`, import.meta.url), 'utf-8'))) || {}, a), {});
 
 export default Object.entries(locales)
-	.reduce((a, [k ,v]) => (a[k] = (() => {
+	.reduce((a, [k, v]) => (a[k] = (() => {
 		const [lang] = k.split('-');
 		switch (k) {
 			case 'ja-JP': return v;
