@@ -30,8 +30,10 @@ Also, when you start implementation, assign yourself to the Issue (if you cannot
 
 ## Well-known branches
 - **`master`** branch is tracking the latest release and used for production purposes.
-- **`develop`** branch is where we work for the next release.
+- **`honi-dev`** branch is where we work for the next release.
 	- When you create a PR, basically target it to this branch.
+- **`develop`** branch is where original misskey team work for the next release.
+  - You **must not** target your PR to this branch.
 - **`l10n_develop`** branch is reserved for localization management.
 
 ## Creating a PR
