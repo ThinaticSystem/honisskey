@@ -3,6 +3,7 @@ export function nyaize(text: string): string {
 		// ja-JP
 		.replace(/な/g, 'にゃ').replace(/ナ/g, 'ニャ').replace(/ﾅ/g, 'ﾆｬ')
 		.replace(/(?<=こ)んにち[は|わ]/g, 'にゃにゃちわ').replace(/(?<=コ)ンニチ[ハ|ワ]/g, 'ニャニャチワ').replace(/(?<=ｺ)ﾝﾆﾁ[ﾊ|ﾜ]/g, 'ﾆｬﾆｬﾁﾜ')
+		.replace(/ございます/g, 'ごにゃいにゃす').replace(/ゴザイマス/g, 'ゴニャイニャス').replace(/ｺﾞｻﾞｲﾏｽ/g, 'ｺﾞﾆｬｲﾆｬｽ')
 		// en-US
 		.replace(/(?<=n)a/gi, x => x === 'A' ? 'YA' : 'ya')
 		.replace(/(?<=morn)ing/gi, x => x === 'ING' ? 'YAN' : 'yan')
