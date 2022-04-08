@@ -93,10 +93,6 @@
 								<div v-if="'pinned' in query && user.pinnedNotes.length > 0" class="_gap">
 									<XNote v-for="note in user.pinnedNotes" :key="note.id" class="note _block" :note="note" :pinned="true"/>
 								</div>
-								<template v-if="narrow">
-									<XPhotos :key="user.id" :user="user"/>
-									<XActivity :key="user.id" :user="user" style="margin-top: var(--margin);"/>
-								</template>
 							</div>
 							<div>
 								<XUserTimeline :user="user"/>
@@ -124,10 +120,7 @@ import * as age from 's-age';
 import XUserTimeline from '@/pages/user/index.timeline.vue';
 import XNote from '@/components/note.vue';
 import MkFollowButton from '@/components/follow-button.vue';
-import MkContainer from '@/components/ui/container.vue';
-import MkFolder from '@/components/ui/folder.vue';
 import MkRemoteCaution from '@/components/remote-caution.vue';
-import MkInfo from '@/components/ui/info.vue';
 import * as Acct from 'misskey-js/built/acct';
 import { getScrollPosition } from '@/scripts/scroll';
 import { getUserMenu } from '@/scripts/get-user-menu';
@@ -141,17 +134,12 @@ export default defineComponent({
 		XUserTimeline,
 		XNote,
 		MkFollowButton,
-		MkContainer,
 		MkRemoteCaution,
-		MkFolder,
-		MkInfo,
 		XFollowList: defineAsyncComponent(() => import('@/pages/user/follow-list.vue')),
 		XReactions: defineAsyncComponent(() => import('@/pages/user/reactions.vue')),
 		XClips: defineAsyncComponent(() => import('@/pages/user/clips.vue')),
 		XPages: defineAsyncComponent(() => import('@/pages/user/pages.vue')),
 		XGallery: defineAsyncComponent(() => import('@/pages/user/gallery.vue')),
-		XPhotos: defineAsyncComponent(() => import('@/pages/user/index.photos.vue')),
-		XActivity: defineAsyncComponent(() => import('@/pages/user/index.activity.vue')),
 	},
 
 	props: {
