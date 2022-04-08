@@ -426,7 +426,17 @@ router.get('/_info_card_', async ctx => {
 router.get('/embed/(.*)', async ctx => {
 	ctx.remove('X-Frame-Options');
 
-	return;
+	// 以下 /(.*) と共通
+	const meta = await fetchMeta();
+	await ctx.render('base', {
+		img: meta.bannerUrl,
+		title: meta.name || 'Misskey',
+		instanceName: meta.name || 'Misskey',
+		desc: meta.description,
+		icon: meta.iconUrl,
+		themeColor: meta.themeColor,
+	});
+	ctx.set('Cache-Control', 'public, max-age=300');
 });
 
 router.get('/bios', async ctx => {
