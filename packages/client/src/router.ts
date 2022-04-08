@@ -81,6 +81,8 @@ const defaultRoutes = [
 	{ path: '/miauth/:session', component: page('miauth') },
 	{ path: '/authorize-follow', component: page('follow') },
 	{ path: '/share', component: page('share') },
+	{ path: '/embed/user/@:acct', component: page('embed/user'), props: route => ({ acct: route.params.acct }) },
+	{ path: '/embed/timeline/:src(.*)', component: page('embed/timeline') },
 	{ path: '/:catchAll(.*)', component: page('not-found') }
 ];
 
