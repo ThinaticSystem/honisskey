@@ -423,7 +423,7 @@ router.get('/_info_card_', async ctx => {
 });
 
 // Embed (iframe)
-router.get('/embed/timeline/@:user', async ctx => {
+router.get('/embed/(.*)', async ctx => {
 	ctx.remove('X-Frame-Options');
 
 	return;
