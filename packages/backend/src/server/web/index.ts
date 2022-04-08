@@ -422,6 +422,13 @@ router.get('/_info_card_', async ctx => {
 	});
 });
 
+// Embed (iframe)
+router.get('/embed/timeline/@:user', async ctx => {
+	ctx.remove('X-Frame-Options');
+
+	return;
+});
+
 router.get('/bios', async ctx => {
 	await ctx.render('bios', {
 		version: config.version,
