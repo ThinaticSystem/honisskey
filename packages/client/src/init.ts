@@ -171,7 +171,7 @@ fetchInstanceMetaPromise.then(() => {
 
 const app = createApp(await (
 	window.location.search === '?zen' ? import('@/ui/zen.vue') :
-	window.location.pathname.slice(0, 7) === '/embed/' ? import('@/ui/zen.vue') :
+	window.location.pathname.slice(0, 7) === '/embed/' ? import('@/ui/embed.vue') :
 	!$i                               ? import('@/ui/visitor.vue') :
 	ui === 'deck'                     ? import('@/ui/deck.vue') :
 	ui === 'desktop'                  ? import('@/ui/desktop.vue') :
