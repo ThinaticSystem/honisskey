@@ -64,7 +64,7 @@
 		"json5-loader": "4.0.1",
 		"katex": "0.15.3",
 		"matter-js": "0.18.0",
-		"mfm-js": "0.21.0",
+		"mfm-js": "git+https://github.com/ThinaticSystem/mfm.js",
 		"misskey-js": "0.0.14",
 		"mocha": "9.2.2",
 		"ms": "2.1.3",
