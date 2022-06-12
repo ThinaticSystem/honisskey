@@ -40,7 +40,7 @@ import { reactionPicker } from '@/scripts/reaction-picker';
 import { getUrlWithoutLoginId } from '@/scripts/login-id';
 import { getAccountFromId } from '@/scripts/get-account-from-id';
 
-console.info(`Misskey v${version}`);
+console.info(`Honisskey v${version}`);
 
 if (_DEV_) {
 	console.warn('Development mode!!!');

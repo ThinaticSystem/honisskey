@@ -31,9 +31,9 @@
 		let lang = localStorage.getItem('lang');
 		if (lang == null || !supportedLangs.includes(lang)) {
 			if (supportedLangs.includes(navigator.language)) {
-				lang = navigator.language;
+				lang = (navigator.language === 'ja-JP') ? 'ja-HN' : navigator.language;
 			} else {
-				lang = supportedLangs.find(x => x.split('-')[0] === navigator.language);
+				lang = (navigator.language === 'ja') ? 'ja-HN' : supportedLangs.find(x => x.split('-')[0] === navigator.language);
 
 				// Fallback
 				if (lang == null) lang = 'en-US';

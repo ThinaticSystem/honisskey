@@ -9,7 +9,7 @@
 	kind: 'dark',
 
 	props: {
-		accent: '#86b300',
+		accent: '#77b58c',
 		accentDarken: ':darken<10<@accent',
 		accentLighten: ':lighten<10<@accent',
 		accentedBg: ':alpha<0.15<@accent',
@@ -42,7 +42,7 @@
 		hashtag: '#ff9156',
 		mention: '@accent',
 		mentionMe: '@mention',
-		renote: '#229e82',
+		renote: '#229e92',
 		modalBg: 'rgba(0, 0, 0, 0.5)',
 		scrollbarHandle: 'rgba(255, 255, 255, 0.2)',
 		scrollbarHandleHover: 'rgba(255, 255, 255, 0.4)',
@@ -66,7 +66,7 @@
 		wallpaperOverlay: 'rgba(0, 0, 0, 0.5)',
 		badge: '#31b1ce',
 		messageBg: '@bg',
-		success: '#86b300',
+		success: '#77b58c',
 		error: '#ec4137',
 		warn: '#ecb637',
 		codeString: '#ffb675',

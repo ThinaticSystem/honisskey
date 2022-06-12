@@ -76,8 +76,13 @@ const tick = () => {
 	const ny = now.getFullYear();
 
 	year.value = ny;
-	month.value = nm + 1;
-	day.value = nd;
+	if (nd === 1 && nm + 1 === 4) { // エイプリルフール
+		month.value = 3;
+		day.value = 32;
+	} else { // 通常
+		month.value = nm + 1;
+		day.value = nd;
+	}
 	weekDay.value = [
 		i18n.ts._weekday.sunday,
 		i18n.ts._weekday.monday,

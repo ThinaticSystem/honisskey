@@ -16,7 +16,7 @@
 	>
 		<source 
 			:src="video.url" 
-			:type="video.type"
+			:type="(video.type === 'video/quicktime') ? null : video.type"
 		>
 	</video>
 	<i class="fas fa-eye-slash" @click="hide = true"></i>

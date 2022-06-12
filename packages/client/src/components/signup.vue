@@ -195,6 +195,7 @@ export default defineComponent({
 
 			const strength = getPasswordStrength(this.password);
 			this.passwordStrength = strength > 0.7 ? 'high' : strength > 0.3 ? 'medium' : 'low';
+			this.passwordRetypeState = this.password == this.retypedPassword ? 'match' : 'not-match';
 		},
 
 		onChangePasswordRetype() {
