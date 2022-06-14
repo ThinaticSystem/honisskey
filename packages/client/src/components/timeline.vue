@@ -34,7 +34,7 @@ watch ($$(latestNotesMode), () => queue = 0);
 
 const prepend = note => {
 	if (latestNotesMode) {
-		if ((new Date()).getTime() - (new Date(note.createdAt)).getTime() <= 1000/*ms*/ * 60/*sec*/) {
+		if ((new Date()).getTime() - (new Date(note.createdAt)).getTime() >= 1000/*ms*/ * 60/*sec*/) {
 			return;
 		}
 	}
