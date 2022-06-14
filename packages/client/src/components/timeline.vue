@@ -3,10 +3,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, provide, onUnmounted } from 'vue';
+import { ref, computed, provide, onUnmounted, watch } from 'vue';
 import XNotes from './notes.vue';
 import * as os from '@/os';
 import { stream } from '@/stream';
+import { defaultStore } from '@/store';
 import * as sound from '@/scripts/sound';
 import { $i } from '@/account';
 
@@ -27,7 +28,16 @@ provide('inChannel', computed(() => props.src === 'channel'));
 
 const tlComponent: InstanceType<typeof XNotes> = $ref();
 
+let queue = $ref(0);
+const latestNotesMode = $computed(() => defaultStore.reactiveState.latestNotesMode.value);
+watch ($$(latestNotesMode), () => queue = 0);
+
 const prepend = note => {
+	if (latestNotesMode) {
+		if ((new Date()).getTime() - (new Date(note.createdAt)).getTime() <= 1000/*ms*/ * 60/*sec*/) {
+			return;
+		}
+	}
 	tlComponent.pagingComponent?.prepend(note);
 
 	emit('note');
