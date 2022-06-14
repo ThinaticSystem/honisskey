@@ -97,6 +97,10 @@ export const defaultStore = markRaw(new Storage('base', {
 			data: Record<string, any>;
 		}[]
 	},
+	latestNotesMode: {
+		where: 'deviceAccount',
+		default: false
+	},
 	tl: {
 		where: 'deviceAccount',
 		default: {

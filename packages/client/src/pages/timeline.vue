@@ -48,8 +48,10 @@ const rootEl = $ref<HTMLElement>();
 
 let queue = $ref(0);
 const src = $computed(() => defaultStore.reactiveState.tl.value.src);
+const latestNotesMode = $computed(() => defaultStore.reactiveState.latestNotesMode.value);
 
 watch ($$(src), () => queue = 0);
+watch ($$(latestNotesMode), () => queue = 0);
 
 function queueUpdated(q: number): void {
 	queue = q;
@@ -91,6 +93,9 @@ async function chooseChannel(ev: MouseEvent): Promise<void> {
 	os.popupMenu(items, ev.currentTarget ?? ev.target);
 }
 
+function saveLatestNotesMode(newLatestNotesMode: boolean): void {
+	defaultStore.set('latestNotesMode', newLatestNotesMode);
+}
 function saveSrc(newSrc: 'home' | 'local' | 'social' | 'global'): void {
 	defaultStore.set('tl', {
 		...defaultStore.state.tl,
@@ -157,6 +162,11 @@ defineExpose({
 			icon: 'fas fa-globe',
 			iconOnly: true,
 			onClick: () => { saveSrc('global'); },
+		}, {
+			active: latestNotesMode === true,
+			title: i18n.ts.latestNotesMode,
+			icon: 'fas fa-angle-double-right',
+			onClick: () => { saveLatestNotesMode(!latestNotesMode); },
 		}] : [])],
 	})),
 });
