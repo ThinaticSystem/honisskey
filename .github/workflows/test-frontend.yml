@@ -1,11 +1,6 @@
 name: Test (frontend)
 
-on:
-  push:
-    branches:
-      - master
-      - develop
-  pull_request:
+on: [push]
 
 jobs:
   vitest:
