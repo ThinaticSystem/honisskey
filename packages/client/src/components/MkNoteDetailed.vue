@@ -215,7 +215,7 @@ function react(viaKeyboard = false): void {
 	reactionPicker.show(reactButton.value, reaction => {
 		os.api('notes/reactions/create', {
 			noteId: appearNote.id,
-			reaction: reaction,
+			reaction: reaction.reaction,
 		});
 	}, () => {
 		focus();
