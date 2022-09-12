@@ -107,7 +107,7 @@ const emit = defineEmits<{
 }>();
 
 const search = ref<HTMLInputElement>();
-const withRenote = ref<boolean>(true);
+const withRenote = ref<boolean>(false);
 const emojis = ref<HTMLDivElement>();
 
 const {
