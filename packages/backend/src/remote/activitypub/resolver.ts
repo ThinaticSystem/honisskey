@@ -17,6 +17,7 @@ import { renderActivity } from '@/remote/activitypub/renderer/index.js';
 import renderFollow from '@/remote/activitypub/renderer/follow.js';
 
 export default class Resolver {
+	private readonly recursionLimit = 100;
 	private history: Set<string>;
 	private user?: ILocalUser;
 
@@ -58,6 +59,10 @@ export default class Resolver {
 
 		if (this.history.has(value)) {
 			throw new Error('cannot resolve already resolved one');
+		}
+
+		if (this.history.size > this.recursionLimit) {
+			throw new Error(`hit recursion limit: ${extractDbHost(value)}`);
 		}
 
 		this.history.add(value);

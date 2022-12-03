@@ -40,7 +40,7 @@ export async function extractPollFromQuestion(source: string | IObject, resolver
  * @param uri URI of AP Question object
  * @returns true if updated
  */
-export async function updateQuestion(value: any) {
+export async function updateQuestion(value: any, resolver: Resolver = new Resolver()) {
 	const uri = typeof value === 'string' ? value : value.id;
 
 	// URIがこのサーバーを指しているならスキップ
@@ -54,8 +54,6 @@ export async function updateQuestion(value: any) {
 	if (poll == null) throw new Error('Question is not registed');
 	//#endregion
 
-	// resolve new Question object
-	const resolver = new Resolver();
 	const question = await resolver.resolve(value) as IQuestion;
 	apLogger.debug(`fetched question: ${JSON.stringify(question, null, 2)}`);
 
