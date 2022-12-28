@@ -65,7 +65,14 @@ const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
 	}, {
 		icon: 'fa fa-user-times',
 		text: i18n.ts.unfollow,
-		action: (): void => {
+		action: async(): Promise<void> => {
+			const { canceled } = await os.confirm({
+				type: 'warning',
+				text: i18n.t('unfollowConfirm', { name: props.user.name || props.user.username }),
+			});
+
+			if (canceled) return;
+
 			os.api('following/delete', {
 				userId: user.id,
 			}).catch(err => {
