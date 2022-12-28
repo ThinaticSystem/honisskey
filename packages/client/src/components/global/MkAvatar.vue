@@ -59,9 +59,13 @@ const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
 		type: 'label',
 		text: '@' + user.username + (user.host !== null ? `@${user.host}` : ''),
 	}, {
+		icon: 'fas fa-eye-slash',
+		text: i18n.ts.mute,
+		action: () => toggleMute(user),
+	}, {
 		icon: 'fa fa-user-times',
 		text: i18n.ts.unfollow,
-		action: () => {
+		action: (): void => {
 			os.api('following/delete', {
 				userId: user.id,
 			}).catch(err => {
@@ -70,6 +74,37 @@ const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
 		},
 	},
 ];
+
+async function toggleMute(user: misskey.entities.User): Promise<void> {
+	const { canceled, result: period } = await os.select({
+		title: i18n.ts.mutePeriod,
+		items: [{
+			value: 'indefinitely', text: i18n.ts.indefinitely,
+		}, {
+			value: 'tenMinutes', text: i18n.ts.tenMinutes,
+		}, {
+			value: 'oneHour', text: i18n.ts.oneHour,
+		}, {
+			value: 'oneDay', text: i18n.ts.oneDay,
+		}, {
+			value: 'oneWeek', text: i18n.ts.oneWeek,
+		}],
+		default: 'indefinitely',
+	});
+	if (canceled) return;
+
+	const expiresAt = period === 'indefinitely' ? null
+		: period === 'tenMinutes' ? Date.now() + (1000 * 60 * 10)
+		: period === 'oneHour' ? Date.now() + (1000 * 60 * 60)
+		: period === 'oneDay' ? Date.now() + (1000 * 60 * 60 * 24)
+		: period === 'oneWeek' ? Date.now() + (1000 * 60 * 60 * 24 * 7)
+		: null;
+
+	os.apiWithDialog('mute/create', {
+		userId: user.id,
+		expiresAt,
+	});
+}
 </script>
 
 <style lang="scss" scoped>
