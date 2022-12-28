@@ -3,7 +3,7 @@
 	<img class="inner" :src="url" decoding="async"/>
 	<MkUserOnlineIndicator v-if="showIndicator" class="indicator" :user="user"/>
 </span>
-<MkA v-else v-user-preview="disablePreview ? undefined : user.id" class="eiwwqkts _noSelect" :class="{ cat: user.isCat, square: $store.state.squareAvatars }" :style="{ color }" :to="userPage(user)" :title="acct(user)" :target="target">
+<MkA v-else v-user-preview="disablePreview ? undefined : user.id" class="eiwwqkts _noSelect" :class="{ cat: user.isCat, square: $store.state.squareAvatars }" :style="{ color }" :to="userPage(user)" :title="acct(user)" :target="target" :additional-contextmenu-items="contextmenuItem(user)">
 	<img class="inner" :src="url" decoding="async"/>
 	<MkUserOnlineIndicator v-if="showIndicator" class="indicator" :user="user"/>
 </MkA>
@@ -17,6 +17,9 @@ import { extractAvgColorFromBlurhash } from '@/scripts/extract-avg-color-from-bl
 import { acct, userPage } from '@/filters/user';
 import MkUserOnlineIndicator from '@/components/MkUserOnlineIndicator.vue';
 import { defaultStore } from '@/store';
+import * as os from '@/os';
+import { i18n } from '@/i18n';
+import { MenuItem } from '@/types/menu';
 
 const props = withDefaults(defineProps<{
 	user: misskey.entities.User;
@@ -50,6 +53,23 @@ watch(() => props.user.avatarBlurhash, () => {
 }, {
 	immediate: true,
 });
+
+const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
+	{
+		type: 'label',
+		text: '@' + user.username + (user.host !== null ? `@${user.host}` : ''),
+	}, {
+		icon: 'fa fa-user-times',
+		text: i18n.ts.unfollow,
+		action: () => {
+			os.api('following/delete', {
+				userId: user.id,
+			}).catch(err => {
+				console.error('もげとるわこれ', err);
+			});
+		},
+	},
+];
 </script>
 
 <style lang="scss" scoped>

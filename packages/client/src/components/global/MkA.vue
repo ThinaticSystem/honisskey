@@ -12,14 +12,17 @@ import { url } from '@/config';
 import { popout as popout_ } from '@/scripts/popout';
 import { i18n } from '@/i18n';
 import { useRouter } from '@/router';
+import { MenuItem } from '@/types/menu';
 
 const props = withDefaults(defineProps<{
 	to: string;
 	activeClass?: null | string;
 	behavior?: null | 'window' | 'browser' | 'modalWindow';
+	additionalContextmenuItems?: null | MenuItem[];
 }>(), {
 	activeClass: null,
 	behavior: null,
+	additionalContextmenuItems: null,
 });
 
 const router = useRouter();
@@ -37,7 +40,7 @@ const active = $computed(() => {
 function onContextmenu(ev) {
 	const selection = window.getSelection();
 	if (selection && selection.toString() !== '') return;
-	os.contextMenu([{
+	os.contextMenu([...props.additionalContextmenuItems ?? [], null, {
 		type: 'label',
 		text: props.to,
 	}, {
