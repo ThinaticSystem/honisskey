@@ -16,14 +16,17 @@ import { url } from '@/config.js';
 import { popout as popout_ } from '@/scripts/popout.js';
 import { i18n } from '@/i18n.js';
 import { useRouter } from '@/router.js';
+import { MenuItem } from '@/types/menu.js';
 
 const props = withDefaults(defineProps<{
 	to: string;
 	activeClass?: null | string;
 	behavior?: null | 'window' | 'browser';
+	additionalContextmenuItems?: null | MenuItem[];
 }>(), {
 	activeClass: null,
 	behavior: null,
+	additionalContextmenuItems: null,
 });
 
 const router = useRouter();
@@ -41,7 +44,8 @@ const active = $computed(() => {
 function onContextmenu(ev) {
 	const selection = window.getSelection();
 	if (selection && selection.toString() !== '') return;
-	os.contextMenu([{
+	const additionalItems = props.additionalContextmenuItems ? [...props.additionalContextmenuItems, null] : [];
+	os.contextMenu([...additionalItems, {
 		type: 'label',
 		text: props.to,
 	}, {
