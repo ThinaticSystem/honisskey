@@ -7,7 +7,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { getStaticImageUrl } from '@/scripts/get-static-image-url';
+import { getStaticImageUrl } from '@/scripts/media-proxy';
 import { char2twemojiFilePath, char2fluentEmojiFilePath } from '@/scripts/emoji-base';
 import { defaultStore } from '@/store';
 import { getEmojiName } from '@/scripts/emojilist';
@@ -17,6 +17,7 @@ const props = defineProps<{
 	normal?: boolean;
 	noStyle?: boolean;
 	isReaction?: boolean;
+	host?: string | null;
 }>();
 
 const char2path = defaultStore.state.emojiStyle === 'twemoji' ? char2twemojiFilePath : char2fluentEmojiFilePath;
@@ -29,7 +30,7 @@ const url = computed(() => {
 	if (char.value) {
 		return char2path(char.value);
 	} else {
-		const rawUrl = '/emoji/' + customEmojiName + '.webp';
+		const rawUrl = props.host ? `/emoji/${customEmojiName}@${props.host}.webp` : `/emoji/${customEmojiName}.webp`;
 		return defaultStore.state.disableShowingAnimatedImages
 			? getStaticImageUrl(rawUrl)
 			: rawUrl;

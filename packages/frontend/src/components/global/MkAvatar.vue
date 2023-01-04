@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { onMounted, watch } from 'vue';
 import * as misskey from 'misskey-js';
-import { getStaticImageUrl } from '@/scripts/get-static-image-url';
+import { getStaticImageUrl } from '@/scripts/media-proxy';
 import { extractAvgColorFromBlurhash } from '@/scripts/extract-avg-color-from-blurhash';
 import { acct, userPage } from '@/filters/user';
 import MkUserOnlineIndicator from '@/components/MkUserOnlineIndicator.vue';
@@ -85,7 +85,7 @@ watch(() => props.user.avatarBlurhash, () => {
 		top: 0;
 		border-radius: 100%;
 		z-index: 1;
-		overflow: hidden;
+		overflow: clip;
 		object-fit: cover;
 		width: 100%;
 		height: 100%;

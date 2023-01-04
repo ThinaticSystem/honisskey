@@ -59,16 +59,16 @@ const finalValue = computed(() => {
 	}
 });
 
-const thumbWidth = computed(() => {
+const getThumbWidth = () => {
 	if (thumbEl.value == null) return 0;
 	return thumbEl.value!.offsetWidth;
-});
+};
 const thumbPosition = ref(0);
 const calcThumbPosition = () => {
 	if (containerEl.value == null) {
 		thumbPosition.value = 0;
 	} else {
-		thumbPosition.value = (containerEl.value.offsetWidth - thumbWidth.value) * steppedRawValue.value;
+		thumbPosition.value = (containerEl.value.offsetWidth - getThumbWidth()) * steppedRawValue.value;
 	}
 };
 watch([steppedRawValue, containerEl], calcThumbPosition);
@@ -110,12 +110,14 @@ const onMousedown = (ev: MouseEvent | TouchEvent) => {
 	style.appendChild(document.createTextNode('* { cursor: grabbing !important; } body * { pointer-events: none !important; }'));
 	document.head.appendChild(style);
 
+	const thumbWidth = getThumbWidth();
+
 	const onDrag = (ev: MouseEvent | TouchEvent) => {
 		ev.preventDefault();
 		const containerRect = containerEl.value!.getBoundingClientRect();
 		const pointerX = ev.touches && ev.touches.length > 0 ? ev.touches[0].clientX : ev.clientX;
-		const pointerPositionOnContainer = pointerX - (containerRect.left + (thumbWidth.value / 2));
-		rawValue.value = Math.min(1, Math.max(0, pointerPositionOnContainer / (containerEl.value!.offsetWidth - thumbWidth.value)));
+		const pointerPositionOnContainer = pointerX - (containerRect.left + (thumbWidth / 2));
+		rawValue.value = Math.min(1, Math.max(0, pointerPositionOnContainer / (containerEl.value!.offsetWidth - thumbWidth)));
 	};
 
 	let beforeValue = finalValue.value;
@@ -171,7 +173,7 @@ const onMousedown = (ev: MouseEvent | TouchEvent) => {
 	$thumbWidth: 20px;
 
 	> .body {
-		padding: 10px 12px;
+		padding: 8px 12px;
 		background: var(--panel);
 		border: solid 1px var(--panel);
 		border-radius: 6px;

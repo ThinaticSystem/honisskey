@@ -38,11 +38,11 @@
 				</I18n>
 				<MkEllipsis/>
 			</div>
-			<transition :name="animation ? 'fade' : ''">
+			<Transition :name="animation ? 'fade' : ''">
 				<div v-show="showIndicator" class="new-message">
 					<button class="_buttonPrimary" @click="onIndicatorClick"><i class="fas ti-fw fa-arrow-circle-down"></i>{{ i18n.ts.newMessageExists }}</button>
 				</div>
-			</transition>
+			</Transition>
 			<XForm v-if="!fetching" ref="formEl" :user="user" :group="group" class="form"/>
 		</footer>
 	</div>
@@ -71,9 +71,9 @@ const props = defineProps<{
 	groupId?: string;
 }>();
 
-let rootEl = $ref<HTMLDivElement>();
-let formEl = $ref<InstanceType<typeof XForm>>();
-let pagingComponent = $ref<InstanceType<typeof MkPagination>>();
+let rootEl = $shallowRef<HTMLDivElement>();
+let formEl = $shallowRef<InstanceType<typeof XForm>>();
+let pagingComponent = $shallowRef<InstanceType<typeof MkPagination>>();
 
 let fetching = $ref(true);
 let user: Misskey.entities.UserDetailed | null = $ref(null);

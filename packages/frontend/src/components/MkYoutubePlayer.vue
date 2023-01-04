@@ -6,11 +6,11 @@
 	</template>
 
 	<div class="poamfof">
-		<transition :name="$store.state.animation ? 'fade' : ''" mode="out-in">
+		<Transition :name="$store.state.animation ? 'fade' : ''" mode="out-in">
 			<div v-if="player.url" class="player">
 				<iframe v-if="!fetching" :src="player.url + (player.url.match(/\?/) ? '&autoplay=1&auto_play=1' : '?autoplay=1&auto_play=1')" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen/>
 			</div>
-		</transition>
+		</Transition>
 		<MkLoading v-if="fetching"/>
 		<MkError v-else-if="!player.url" @retry="ytFetch()"/>
 	</div>
@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import XWindow from '@/components/MkWindow.vue';
-import { lang } from '@/config';
+import { versatileLang } from '@/scripts/intl-const';
 
 const props = defineProps<{
 	url: string;
@@ -35,11 +35,9 @@ let player = $ref({
 	height: null,
 });
 
-const requestLang = (lang ?? 'ja-JP').replace('ja-KS', 'ja-JP');
-
 const ytFetch = (): void => {
 	fetching = true;
-	window.fetch(`/url?url=${encodeURIComponent(requestUrl.href)}&lang=${requestLang}`).then(res => {
+	window.fetch(`/url?url=${encodeURIComponent(requestUrl.href)}&lang=${versatileLang}`).then(res => {
 		res.json().then(info => {
 			if (info.url == null) return;
 			title = info.title;

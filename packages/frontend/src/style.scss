@@ -246,32 +246,6 @@ hr {
 	}
 }
 
-._inputs {
-	display: flex;
-	margin: 32px 0;
-
-	&:first-child {
-		margin-top: 8px;
-	}
-
-	&:last-child {
-		margin-bottom: 8px;
-	}
-
-	> * {
-		flex: 1;
-		margin: 0 !important;
-
-		&:not(:first-child) {
-			margin-left: 8px !important;
-		}
-
-		&:not(:last-child) {
-			margin-right: 8px !important;
-		}
-	}
-}
-
 ._panel {
 	background: var(--panel);
 	border-radius: var(--radius);
@@ -472,14 +446,6 @@ hr {
 	}
 }
 
-._keyValue {
-	display: flex;
-
-	> * {
-		flex: 1;
-	}
-}
-
 ._link {
 	color: var(--link);
 }
@@ -512,10 +478,10 @@ hr {
 	transition-timing-function: cubic-bezier(0,.5,.5,1);
 }
 
-.zoom-enter-active, .zoom-leave-active {
+._transition_zoom-enter-active, ._transition_zoom-leave-active {
 	transition: opacity 0.5s, transform 0.5s !important;
 }
-.zoom-enter-from, .zoom-leave-to {
+._transition_zoom-enter-from, ._transition_zoom-leave-to {
 	opacity: 0;
 	transform: scale(0.9);
 }

@@ -220,7 +220,7 @@ export class ClientServerService {
 			return reply.sendFile('/apple-touch-icon.png', staticAssets);
 		});
 
-		fastify.get<{ Params: { path: string } }>('/emoji/:path(.*)', async (request, reply) => {
+		fastify.get<{ Params: { path: string }; Querystring: { static?: any; }; }>('/emoji/:path(.*)', async (request, reply) => {
 			const path = request.params.path;
 
 			if (!path.match(/^[a-zA-Z0-9\-_@\.]+?\.webp$/)) {
@@ -228,11 +228,14 @@ export class ClientServerService {
 				return;
 			}
 
+			reply.header('Cache-Control', 'public, max-age=86400');
+
 			const name = path.split('@')[0].replace('.webp', '');
 			const host = path.split('@')[1]?.replace('.webp', '');
 
 			const emoji = await this.emojisRepository.findOneBy({
-				host: host == null ? IsNull() : host,
+				// `@.` is the spec of ReactionService.decodeReaction
+				host: (host == null || host === '.') ? IsNull() : host,
 				name: name,
 			});
 
@@ -243,8 +246,16 @@ export class ClientServerService {
 
 			reply.header('Content-Security-Policy', 'default-src \'none\'; style-src \'unsafe-inline\'');
 
-			// ?? emoji.originalUrl してるのは後方互換性のため
-			return await reply.redirect(301, emoji.publicUrl ?? emoji.originalUrl);
+			const url = new URL('/proxy/emoji.webp', this.config.url);
+			// || emoji.originalUrl してるのは後方互換性のため（publicUrlはstringなので??はだめ）
+			url.searchParams.set('url', emoji.publicUrl || emoji.originalUrl);
+			url.searchParams.set('emoji', '1');
+			if ('static' in request.query) url.searchParams.set('static', '1');
+
+			return await reply.redirect(
+				301,
+				url.toString(),
+			);
 		});
 
 		fastify.get<{ Params: { path: string } }>('/fluent-emoji/:path(.*)', async (request, reply) => {
@@ -338,15 +349,15 @@ export class ClientServerService {
 		fastify.get('/opensearch.xml', async (request, reply) => {
 			const meta = await this.metaService.fetch();
 
-			const name = meta.name || "Misskey";
-			let content = "";
-			content += `<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">`;
+			const name = meta.name || 'Misskey';
+			let content = '';
+			content += '<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">';
 			content += `<ShortName>${name} Search</ShortName>`;
 			content += `<Description>${name} Search</Description>`;
-			content += `<InputEncoding>UTF-8</InputEncoding>`;
+			content += '<InputEncoding>UTF-8</InputEncoding>';
 			content += `<Image width="16" height="16" type="image/x-icon">${this.config.url}/favicon.ico</Image>`;
 			content += `<Url type="text/html" template="${this.config.url}/search?q={searchTerms}"/>`;
-			content += `</OpenSearchDescription>`;
+			content += '</OpenSearchDescription>';
 
 			reply.header('Content-Type', 'application/opensearchdescription+xml');
 			return await reply.send(content);

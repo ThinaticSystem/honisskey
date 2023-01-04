@@ -25,7 +25,7 @@
 						<template #default="{items}">
 							<div class="ldhfsamy">
 								<button v-for="emoji in items" :key="emoji.id" class="emoji _panel _button" :class="{ selected: selectedEmojis.includes(emoji.id) }" @click="selectMode ? toggleSelect(emoji) : edit(emoji)">
-									<img :src="emoji.url" class="img" :alt="emoji.name"/>
+									<img :src="`/emoji/${emoji.name}.webp`" class="img" :alt="emoji.name"/>
 									<div class="body">
 										<div class="name _monospace">{{ emoji.name }}</div>
 										<div class="info">{{ emoji.category }}</div>
@@ -51,7 +51,7 @@
 						<template #default="{items}">
 							<div class="ldhfsamy">
 								<div v-for="emoji in items" :key="emoji.id" class="emoji _panel _button" @click="remoteMenu(emoji, $event)">
-									<img :src="emoji.url" class="img" :alt="emoji.name"/>
+									<img :src="`/emoji/${emoji.name}@${emoji.host}.webp`" class="img" :alt="emoji.name"/>
 									<div class="body">
 										<div class="name _monospace">{{ emoji.name }}</div>
 										<div class="info">{{ emoji.host }}</div>
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, defineComponent, ref, toRef } from 'vue';
+import { computed, defineAsyncComponent, defineComponent, ref, shallowRef } from 'vue';
 import XHeader from './_header_.vue';
 import MkButton from '@/components/MkButton.vue';
 import MkInput from '@/components/form/input.vue';
@@ -81,7 +81,7 @@ import * as os from '@/os';
 import { i18n } from '@/i18n';
 import { definePageMetadata } from '@/scripts/page-metadata';
 
-const emojisPaginationComponent = ref<InstanceType<typeof MkPagination>>();
+const emojisPaginationComponent = shallowRef<InstanceType<typeof MkPagination>>();
 
 const tab = ref('local');
 const query = ref(null);
@@ -291,7 +291,7 @@ const headerTabs = $computed(() => [{
 
 definePageMetadata(computed(() => ({
 	title: i18n.ts.customEmojis,
-	icon: 'ti ti-mood-happy',
+	icon: 'ti ti-icons',
 })));
 </script>
 

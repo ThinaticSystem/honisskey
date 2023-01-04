@@ -1,6 +1,7 @@
 <template>
 <div class="omfetrab" :class="['s' + size, 'w' + width, 'h' + height, { asDrawer }]" :style="{ maxHeight: maxHeight ? maxHeight + 'px' : undefined }">
 	<input ref="search" :value="q" class="search" data-prevent-emoji-insert :class="{ filled: q != null && q != '' }" :placeholder="i18n.ts.search" type="search" @input="input()" @paste.stop="paste" @keyup.enter="done()">
+	<MkSwitch v-if="props.asReactionPicker" v-model="withRenote" class="withRenote">{{ i18n.ts.reactWithRenote }}</MkSwitch>
 	<div ref="emojis" class="emojis">
 		<section class="result">
 			<div v-if="searchResultCustom.length > 0" class="body">
@@ -12,8 +13,7 @@
 					tabindex="0"
 					@click="chosen(emoji, $event)"
 				>
-					<!--<MkEmoji v-if="emoji.char != null" :emoji="emoji.char"/>-->
-					<img class="emoji" :src="disableShowingAnimatedImages ? getStaticImageUrl(emoji.url) : emoji.url"/>
+					<MkEmoji class="emoji" :emoji="`:${emoji.name}:`"/>
 				</button>
 			</div>
 			<div v-if="searchResultUnicode.length > 0" class="body">
@@ -74,17 +74,15 @@
 		<button class="_button tab" :class="{ active: tab === 'unicode' }" @click="tab = 'unicode'"><i class="ti ti-leaf ti-fw"></i></button>
 		<button class="_button tab" :class="{ active: tab === 'tags' }" @click="tab = 'tags'"><i class="ti ti-hash ti-fw"></i></button>
 	</div>
-	<MkSwitch v-if="props.asReactionPicker" v-model="withRenote" class="withRenote">{{ i18n.ts.reactWithRenote }}</MkSwitch>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, shallowRef, computed, watch, onMounted } from 'vue';
 import * as Misskey from 'misskey-js';
 import XSection from '@/components/MkEmojiPicker.section.vue';
 import { emojilist, UnicodeEmojiDef, unicodeEmojiCategories as categories } from '@/scripts/emojilist';
-import { getStaticImageUrl } from '@/scripts/get-static-image-url';
-import Ripple from '@/components/MkRipple.vue';
+import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import * as os from '@/os';
 import { isTouchUsing } from '@/scripts/touch';
 import { deviceKind } from '@/scripts/device-kind';
@@ -106,9 +104,9 @@ const emit = defineEmits<{
 	(ev: 'chosen', v: { reaction: string, withRenote: boolean } | string): void;
 }>();
 
-const search = ref<HTMLInputElement>();
-const withRenote = ref<boolean>(false);
-const emojis = ref<HTMLDivElement>();
+const search = shallowRef<HTMLInputElement>();
+const emojis = shallowRef<HTMLDivElement>();
+const withRenote = shallowRef<boolean>(false);
 
 const {
 	reactions: pinned,
@@ -294,7 +292,7 @@ function chosen(emoji: any, ev?: MouseEvent) {
 		const rect = el.getBoundingClientRect();
 		const x = rect.left + (el.offsetWidth / 2);
 		const y = rect.top + (el.offsetHeight / 2);
-		os.popup(Ripple, { x, y }, {}, 'end');
+		os.popup(MkRippleEffect, { x, y }, {}, 'end');
 	}
 
 	const key = getKey(emoji);

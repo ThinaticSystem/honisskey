@@ -4,7 +4,7 @@
 
 	<div class="wbrkwalb">
 		<MkLoading v-if="fetching"/>
-		<transition-group v-else tag="div" :name="$store.state.animation ? 'chart' : ''" class="instances">
+		<TransitionGroup v-else tag="div" :name="$store.state.animation ? 'chart' : ''" class="instances">
 			<div v-for="(instance, i) in instances" :key="instance.id" class="instance">
 				<img :src="getInstanceIcon(instance)" alt=""/>
 				<div class="body">
@@ -13,7 +13,7 @@
 				</div>
 				<MkMiniChart class="chart" :src="charts[i].requests.received"/>
 			</div>
-		</transition-group>
+		</TransitionGroup>
 	</div>
 </MkContainer>
 </template>
@@ -58,7 +58,7 @@ const fetching = ref(true);
 
 const fetch = async () => {
 	const fetchedInstances = await os.api('federation/instances', {
-		sort: '+lastCommunicatedAt',
+		sort: '+latestRequestReceivedAt',
 		limit: 5,
 	});
 	const fetchedCharts = await Promise.all(fetchedInstances.map(i => os.apiGet('charts/instance', { host: i.host, limit: 16, span: 'hour' })));

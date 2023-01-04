@@ -19,38 +19,38 @@
 	<button v-if="!isDesktop && !isMobile" class="widgetButton _button" @click="widgetsShowing = true"><i class="ti ti-apps"></i></button>
 
 	<div v-if="isMobile" class="buttons">
-		<button class="button nav _button" @click="drawerMenuShowing = true"><i class="ti ti-menu-2"></i><span v-if="menuIndicated" class="indicator"><i class="_indicatorCircle"></i></span></button>
-		<button class="button home _button" @click="mainRouter.currentRoute.value.name === 'index' ? top() : mainRouter.push('/')"><i class="ti ti-home"></i></button>
-		<button class="button notifications _button" @click="mainRouter.push('/my/notifications')"><i class="ti ti-bell"></i><span v-if="$i?.hasUnreadNotification" class="indicator"><i class="_indicatorCircle"></i></span></button>
-		<button class="button widget _button" @click="widgetsShowing = true"><i class="ti ti-apps"></i></button>
-		<button class="button post _button" @click="os.post()"><i class="ti ti-pencil"></i></button>
+		<button class="button nav _button" @click="drawerMenuShowing = true"><i class="icon ti ti-menu-2"></i><span v-if="menuIndicated" class="indicator"><i class="_indicatorCircle"></i></span></button>
+		<button class="button home _button" @click="mainRouter.currentRoute.value.name === 'index' ? top() : mainRouter.push('/')"><i class="icon ti ti-home"></i></button>
+		<button class="button notifications _button" @click="mainRouter.push('/my/notifications')"><i class="icon ti ti-bell"></i><span v-if="$i?.hasUnreadNotification" class="indicator"><i class="_indicatorCircle"></i></span></button>
+		<button class="button widget _button" @click="widgetsShowing = true"><i class="icon ti ti-apps"></i></button>
+		<button class="button post _button" @click="os.post()"><i class="icon ti ti-pencil"></i></button>
 	</div>
 
-	<transition :name="$store.state.animation ? 'menuDrawer-back' : ''">
+	<Transition :name="$store.state.animation ? 'menuDrawer-back' : ''">
 		<div
 			v-if="drawerMenuShowing"
 			class="menuDrawer-back _modalBg"
 			@click="drawerMenuShowing = false"
 			@touchstart.passive="drawerMenuShowing = false"
 		></div>
-	</transition>
+	</Transition>
 
-	<transition :name="$store.state.animation ? 'menuDrawer' : ''">
+	<Transition :name="$store.state.animation ? 'menuDrawer' : ''">
 		<XDrawerMenu v-if="drawerMenuShowing" class="menuDrawer"/>
-	</transition>
+	</Transition>
 
-	<transition :name="$store.state.animation ? 'widgetsDrawer-back' : ''">
+	<Transition :name="$store.state.animation ? 'widgetsDrawer-back' : ''">
 		<div
 			v-if="widgetsShowing"
 			class="widgetsDrawer-back _modalBg"
 			@click="widgetsShowing = false"
 			@touchstart.passive="widgetsShowing = false"
 		></div>
-	</transition>
+	</Transition>
 
-	<transition :name="$store.state.animation ? 'widgetsDrawer' : ''">
+	<Transition :name="$store.state.animation ? 'widgetsDrawer' : ''">
 		<XWidgets v-if="widgetsShowing" class="widgetsDrawer"/>
-	</transition>
+	</Transition>
 
 	<XCommon/>
 </div>
@@ -86,7 +86,7 @@ window.addEventListener('resize', () => {
 });
 
 let pageMetadata = $ref<null | ComputedRef<PageMetadata>>();
-const widgetsEl = $ref<HTMLElement>();
+const widgetsEl = $shallowRef<HTMLElement>();
 const widgetsShowing = $ref(false);
 
 provide('router', mainRouter);
@@ -113,18 +113,20 @@ mainRouter.on('change', () => {
 
 document.documentElement.style.overflowY = 'scroll';
 
-if (defaultStore.state.widgets.length === 0) {
-	defaultStore.set('widgets', [{
-		name: 'calendar',
-		id: 'a', place: 'right', data: {},
-	}, {
-		name: 'notifications',
-		id: 'b', place: 'right', data: {},
-	}, {
-		name: 'trends',
-		id: 'c', place: 'right', data: {},
-	}]);
-}
+defaultStore.ready.then(() => {
+	if (defaultStore.state.widgets.length === 0) {
+		defaultStore.set('widgets', [{
+			name: 'calendar',
+			id: 'a', place: 'right', data: {},
+		}, {
+			name: 'notifications',
+			id: 'b', place: 'right', data: {},
+		}, {
+			name: 'trends',
+			id: 'c', place: 'right', data: {},
+		}]);
+	}
+});
 
 onMounted(() => {
 	if (!isDesktop.value) {
@@ -285,8 +287,10 @@ const wallpaper = localStorage.getItem('wallpaper') != null;
 		z-index: 1000;
 		bottom: 0;
 		left: 0;
-		padding: 16px 16px calc(env(safe-area-inset-bottom, 0px) + 16px) 16px;
-		display: flex;
+		padding: 12px 12px max(12px, env(safe-area-inset-bottom, 0px)) 12px;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		grid-gap: 8px;
 		width: 100%;
 		box-sizing: border-box;
 		-webkit-backdrop-filter: var(--blur, blur(32px));
@@ -296,25 +300,14 @@ const wallpaper = localStorage.getItem('wallpaper') != null;
 
 		> .button {
 			position: relative;
-			flex: 1;
 			padding: 0;
+			aspect-ratio: 1;
+			width: 100%;
+			max-width: 60px;
 			margin: auto;
-			height: 64px;
-			border-radius: 8px;
+			border-radius: 100%;
 			background: var(--panel);
 			color: var(--fg);
-
-			&:not(:last-child) {
-				margin-right: 12px;
-			}
-
-			@media (max-width: 400px) {
-				height: 60px;
-
-				&:not(:last-child) {
-					margin-right: 8px;
-				}
-			}
 
 			&:hover {
 				background: var(--X2);
@@ -329,24 +322,21 @@ const wallpaper = localStorage.getItem('wallpaper') != null;
 				animation: blink 1s infinite;
 			}
 
-			&:first-child {
-				margin-left: 0;
-			}
-
-			&:last-child {
-				margin-right: 0;
-			}
-
-			> * {
-				font-size: 20px;
+			> .icon {
+				font-size: 18px;
 			}
 
 			&:disabled {
 				cursor: default;
 
-				> * {
+				> .icon {
 					opacity: 0.5;
 				}
+			}
+
+			&.post {
+				background: linear-gradient(90deg, var(--buttonGradateA), var(--buttonGradateB));
+				color: var(--fgOnAccent);
 			}
 		}
 	}

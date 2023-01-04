@@ -3,7 +3,7 @@
 	<template #header><MkPageHeader :actions="headerActions" :tabs="headerTabs"/></template>
 	<MkSpacer :content-max="800">
 		<div class="fcuexfpr">
-			<transition :name="$store.state.animation ? 'fade' : ''" mode="out-in">
+			<Transition :name="$store.state.animation ? 'fade' : ''" mode="out-in">
 				<div v-if="note" class="note">
 					<div v-if="showNext" class="_gap">
 						<XNotes class="_content" :pagination="nextPagination" :no-gap="true"/>
@@ -34,7 +34,7 @@
 				</div>
 				<MkError v-else-if="error" @retry="fetch()"/>
 				<MkLoading v-else/>
-			</transition>
+			</Transition>
 		</div>
 	</MkSpacer>
 </MkStickyContainer>
@@ -51,6 +51,7 @@ import MkButton from '@/components/MkButton.vue';
 import * as os from '@/os';
 import { definePageMetadata } from '@/scripts/page-metadata';
 import { i18n } from '@/i18n';
+import { dateString } from '@/filters/date';
 
 const props = defineProps<{
 	noteId: string;
@@ -127,7 +128,7 @@ const headerTabs = $computed(() => []);
 
 definePageMetadata(computed(() => note ? {
 	title: i18n.ts.note,
-	subtitle: new Date(note.createdAt).toLocaleString(),
+	subtitle: dateString(note.createdAt),
 	avatar: note.user,
 	path: `/notes/${note.id}`,
 	share: {

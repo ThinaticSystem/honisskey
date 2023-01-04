@@ -1,16 +1,16 @@
 <template>
-<transition :name="$store.state.animation ? 'tooltip' : ''" appear @after-leave="emit('closed')">
+<Transition :name="$store.state.animation ? 'tooltip' : ''" appear @after-leave="emit('closed')">
 	<div v-show="showing" ref="el" class="buebdbiu _acrylic _shadow" :style="{ zIndex, maxWidth: maxWidth + 'px' }">
 		<slot>
 			<Mfm v-if="asMfm" :text="text"/>
 			<span v-else>{{ text }}</span>
 		</slot>
 	</div>
-</transition>
+</Transition>
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, shallowRef } from 'vue';
 import * as os from '@/os';
 import { calcPopupPosition } from '@/scripts/popup-position';
 
@@ -34,7 +34,7 @@ const emit = defineEmits<{
 	(ev: 'closed'): void;
 }>();
 
-const el = ref<HTMLElement>();
+const el = shallowRef<HTMLElement>();
 const zIndex = os.claimZIndex('high');
 
 function setPosition() {
