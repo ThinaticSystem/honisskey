@@ -3,7 +3,7 @@
 	<img class="inner" :src="url" decoding="async"/>
 	<MkUserOnlineIndicator v-if="showIndicator" class="indicator" :user="user"/>
 </span>
-<MkA v-else v-user-preview="disablePreview ? undefined : user.id" class="eiwwqkts _noSelect" :class="{ cat: user.isCat, square: $store.state.squareAvatars }" :style="{ color }" :to="userPage(user)" :title="acct(user)" :target="target">
+<MkA v-else v-user-preview="disablePreview ? undefined : user.id" class="eiwwqkts _noSelect" :class="{ cat: user.isCat, square: $store.state.squareAvatars }" :style="{ color }" :to="userPage(user)" :title="acct(user)" :target="target" :additional-contextmenu-items="contextmenuItem(user)">
 	<img class="inner" :src="url" decoding="async"/>
 	<MkUserOnlineIndicator v-if="showIndicator" class="indicator" :user="user"/>
 </MkA>
@@ -17,6 +17,9 @@ import { extractAvgColorFromBlurhash } from '@/scripts/extract-avg-color-from-bl
 import { acct, userPage } from '@/filters/user';
 import MkUserOnlineIndicator from '@/components/MkUserOnlineIndicator.vue';
 import { defaultStore } from '@/store';
+import { MenuItem } from '@/types/menu';
+import * as os from '@/os';
+import { i18n } from '@/i18n';
 
 const props = withDefaults(defineProps<{
 	user: misskey.entities.User;
@@ -50,6 +53,60 @@ watch(() => props.user.avatarBlurhash, () => {
 }, {
 	immediate: true,
 });
+
+const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
+	{
+		type: 'label',
+		text: '@' + user.username + (user.host !== null ? `@${user.host}` : ''),
+	}, {
+		icon: 'ti ti-eye-off',
+		text: i18n.ts.mute,
+		action: () => toggleMute(user),
+	}, {
+		icon: 'ti ti-user-x',
+		text: i18n.ts.unfollow,
+		action: async(): Promise<void> => {
+			const { canceled } = await os.confirm({
+				type: 'warning',
+				text: i18n.t('unfollowConfirm', { name: props.user.name || props.user.username }),
+			});
+			if (canceled) return;
+			os.api('following/delete', {
+				userId: user.id,
+			}).catch(err => {
+				console.error('もげとるわこれ', err);
+			});
+		},
+	},
+];
+async function toggleMute(user: misskey.entities.User): Promise<void> {
+	const { canceled, result: period } = await os.select({
+		title: i18n.ts.mutePeriod,
+		items: [{
+			value: 'indefinitely', text: i18n.ts.indefinitely,
+		}, {
+			value: 'tenMinutes', text: i18n.ts.tenMinutes,
+		}, {
+			value: 'oneHour', text: i18n.ts.oneHour,
+		}, {
+			value: 'oneDay', text: i18n.ts.oneDay,
+		}, {
+			value: 'oneWeek', text: i18n.ts.oneWeek,
+		}],
+		default: 'indefinitely',
+	});
+	if (canceled) return;
+	const expiresAt = period === 'indefinitely' ? null
+		: period === 'tenMinutes' ? Date.now() + (1000 * 60 * 10)
+		: period === 'oneHour' ? Date.now() + (1000 * 60 * 60)
+		: period === 'oneDay' ? Date.now() + (1000 * 60 * 60 * 24)
+		: period === 'oneWeek' ? Date.now() + (1000 * 60 * 60 * 24 * 7)
+		: null;
+	os.apiWithDialog('mute/create', {
+		userId: user.id,
+		expiresAt,
+	});
+}
 </script>
 
 <style lang="scss" scoped>
