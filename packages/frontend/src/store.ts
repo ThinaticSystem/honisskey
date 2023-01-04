@@ -80,7 +80,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	mutedWords: {
 		where: 'account',
-		default: [],
+		default: [] as string[][],
 	},
 	mutedAds: {
 		where: 'account',

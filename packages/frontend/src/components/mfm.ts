@@ -12,6 +12,8 @@ import MkSparkle from '@/components/MkSparkle.vue';
 import MkA from '@/components/global/MkA.vue';
 import { host } from '@/config';
 import { MFM_TAGS } from '@/scripts/mfm-tags';
+import { i18n } from '@/i18n';
+import { defaultStore } from '@/store';
 
 export default defineComponent({
 	props: {
@@ -233,9 +235,21 @@ export default defineComponent({
 				}
 
 				case 'hashtag': {
+					const tagWithHash = `#${token.props.hashtag}`;
 					return [h(MkA, {
 						key: Math.random(),
 						to: this.isNote ? `/tags/${encodeURIComponent(token.props.hashtag)}` : `/explore/tags/${encodeURIComponent(token.props.hashtag)}`,
+						additionalContextmenuItems: [
+							{
+								type: 'label',
+								text: tagWithHash,
+							},
+							{
+								icon: 'ti ti-eye-off',
+								text: i18n.ts.mute,
+								action: () => addWordMute(tagWithHash),
+							},
+						],
 						style: 'color:var(--hashtag);',
 					}, `#${token.props.hashtag}`)];
 				}
@@ -325,3 +339,8 @@ export default defineComponent({
 		return h('span', genEl(ast));
 	},
 });
+
+const addWordMute = (word: string): void => {
+	const mutedWords = defaultStore.state.mutedWords;
+	defaultStore.set('mutedWords', [...mutedWords, [word]]);
+};
