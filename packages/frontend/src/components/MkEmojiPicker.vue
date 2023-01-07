@@ -89,7 +89,7 @@ import { deviceKind } from '@/scripts/device-kind';
 import { emojiCategories, instance } from '@/instance';
 import { i18n } from '@/i18n';
 import { defaultStore } from '@/store';
-import MkSwitch from '@/components/form/switch.vue';
+import MkSwitch from '@/components/MkSwitch.vue';
 
 const props = withDefaults(defineProps<{
 	showPinned?: boolean;
