@@ -1,6 +1,6 @@
 <template>
 <div :class="$style.root" :style="{ zIndex, top: `${y - 64}px`, left: `${x - 64}px` }">
-	<span class="text" :class="{ up }">+1</span>
+	<span class="text" :class="{ up }">ｷﾀｰﾝ</span>
 </div>
 </template>
 
