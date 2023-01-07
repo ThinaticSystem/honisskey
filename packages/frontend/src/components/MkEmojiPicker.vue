@@ -1,5 +1,5 @@
 <template>
-<div class="omfetrab" :class="['s' + size, 'w' + width, 'h' + height, { asDrawer }]" :style="{ maxHeight: maxHeight ? maxHeight + 'px' : undefined }">
+<div class="omfetrab" :class="['s' + size, 'w' + width, 'h' + height, { asDrawer, asWindow }]" :style="{ maxHeight: maxHeight ? maxHeight + 'px' : undefined }">
 	<input ref="search" :value="q" class="search" data-prevent-emoji-insert :class="{ filled: q != null && q != '' }" :placeholder="i18n.ts.search" type="search" @input="input()" @paste.stop="paste" @keyup.enter="done()">
 	<MkSwitch v-if="props.asReactionPicker" v-model="withRenote" class="withRenote">{{ i18n.ts.reactWithRenote }}</MkSwitch>
 	<div ref="emojis" class="emojis">
@@ -96,6 +96,7 @@ const props = withDefaults(defineProps<{
 	asReactionPicker?: boolean;
 	maxHeight?: number;
 	asDrawer?: boolean;
+	asWindow?: boolean;
 }>(), {
 	showPinned: true,
 });
@@ -428,6 +429,28 @@ defineExpose({
 					font-size: 15px;
 				}
 
+				> .body {
+					display: grid;
+					grid-template-columns: var(--columns);
+					font-size: 30px;
+
+					> .item {
+						aspect-ratio: 1 / 1;
+						width: auto;
+						height: auto;
+						min-width: 0;
+					}
+				}
+			}
+		}
+	}
+
+	&.asWindow {
+		width: 100% !important;
+		height: 100% !important;
+
+		> .emojis {
+			::v-deep(section) {
 				> .body {
 					display: grid;
 					grid-template-columns: var(--columns);
