@@ -102,6 +102,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<span v-else-if="notification.type === 'app'" :class="$style.text">
 				<Mfm :text="notification.body" :nowrap="false"/>
 			</span>
+			<button v-if="notification.type === 'renote'" class="_textButton" @click="openRenoteDestination(notification)">RN先を覗く👀</button>
 		</div>
 	</div>
 </div>
