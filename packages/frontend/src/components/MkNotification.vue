@@ -56,7 +56,6 @@
 				<Mfm :text="getNoteSummary(notification.note)" :plain="true" :nowrap="!full"/>
 				<i class="ti ti-quote"></i>
 			</MkA>
-			<button v-else-if="notification.type === 'renote'" class="_textButton" @click="openRenoteDestination(notification)">RN先を覗く👀</button>
 			<span v-else-if="notification.type === 'follow'" class="text" style="opacity: 0.6;">{{ i18n.ts.youGotNewFollower }}<div v-if="full"><MkFollowButton :user="notification.user" :full="true"/></div></span>
 			<span v-else-if="notification.type === 'followRequestAccepted'" class="text" style="opacity: 0.6;">{{ i18n.ts.followRequestAccepted }}</span>
 			<span v-else-if="notification.type === 'receiveFollowRequest'" class="text" style="opacity: 0.6;">{{ i18n.ts.receiveFollowRequest }}<div v-if="full && !followRequestDone"><button class="_textButton" @click="acceptFollowRequest()">{{ i18n.ts.accept }}</button> | <button class="_textButton" @click="rejectFollowRequest()">{{ i18n.ts.reject }}</button></div></span>
@@ -64,6 +63,7 @@
 			<span v-else-if="notification.type === 'app'" class="text">
 				<Mfm :text="notification.body" :nowrap="!full"/>
 			</span>
+			<button v-if="notification.type === 'renote'" class="_textButton" @click="openRenoteDestination(notification)">RN先を覗く👀</button>
 		</div>
 	</div>
 </div>
