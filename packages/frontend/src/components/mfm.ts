@@ -14,6 +14,15 @@ import { MFM_TAGS } from '@/scripts/mfm-tags';
 import { i18n } from '@/i18n';
 import { defaultStore } from '@/store';
 
+const QUOTE_STYLE = `
+display: block;
+margin: 8px;
+padding: 6px 0 6px 12px;
+color: var(--fg);
+border-left: solid 3px var(--fg);
+opacity: 0.7;
+`.split('\n').join(' ');
+
 export default defineComponent({
 	props: {
 		text: {
@@ -290,11 +299,11 @@ export default defineComponent({
 				case 'quote': {
 					if (!this.nowrap) {
 						return [h('div', {
-							class: 'quote',
+							style: QUOTE_STYLE,
 						}, genEl(token.children))];
 					} else {
 						return [h('span', {
-							class: 'quote',
+							style: QUOTE_STYLE,
 						}, genEl(token.children))];
 					}
 				}
