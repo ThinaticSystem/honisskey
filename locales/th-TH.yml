@@ -953,6 +953,11 @@ _role:
   chooseRoleToAssign: "เลือกบทบาทที่ต้องการกำหนด"
   canEditMembersByModerator: "อนุญาตให้ผู้ดูแลแก้ไขสมาชิก"
   descriptionOfCanEditMembersByModerator: "เมื่อเปิดใช้ ผู้ดูแลนอกเหนือจากผู้ดูแลระบบแล้ว จะสามารถกำหนดและยกเลิกการมอบหมายบทบาทนี้ให้กับผู้ใช้ได้ เมื่อปิด เฉพาะผู้ดูแลระบบเท่านั้นที่จะสามารถกำหนดผู้ใช้ได้นะ"
+  priority: "ลำดับความสำคัญ"
+  _priority:
+    low: "ต่ำ"
+    middle: "ปานกลาง"
+    high: "สูง"
   _options:
     gtlAvailable: "การดูไทม์ไลน์ทั่วโลก"
     ltlAvailable: "การดูไทม์ไลน์ในท้องถิ่น"
@@ -966,6 +971,10 @@ _role:
     isRemote: "ผู้ใช้ระยะไกล"
     createdLessThan: "สร้างน้อยกว่า"
     createdMoreThan: "สร้างมากกว่า"
+    followersLessThanOrEq: "จำนวนผู้ติดตามน้อยกว่าหรือเท่ากับ\n"
+    followersMoreThanOrEq: "จำนวนผู้ติดตามมากกว่าหรือเท่ากับ\n"
+    followingLessThanOrEq: "จำนวนบัญชีต่อไปนี้คือ น้อยกว่าหรือเท่ากับ"
+    followingMoreThanOrEq: "จำนวนบัญชีต่อไปนี้คือ มากกว่าหรือเท่ากับ"
     and: "และ"
     or: "หรือ"
     not: "ไม่"
@@ -1001,6 +1010,7 @@ _accountDelete:
 _ad:
   back: "ย้อนกลับ"
   reduceFrequencyOfThisAd: "แสดงโฆษณานี้ให้น้อยลง"
+  hide: "ไม่ต้องแสดง"
 _forgotPassword:
   enterEmail: "ป้อนที่อยู่อีเมลที่คุณเคยใช้ในการลงทะเบียนไว้ ลิงก์ที่คุณสามารถรีเซ็ตรหัสผ่านได้นั้นจะถูกส่งไปนะ"
   ifNoEmail: "ถ้าหากคุณไม่ได้ใช้อีเมลระหว่างการลงทะเบียน กรุณาติดต่อผู้ดูแลระบบอินสแตนซ์แทนนะ"

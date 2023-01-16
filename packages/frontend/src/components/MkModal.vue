@@ -7,9 +7,9 @@
 	:leave-to-class="$style['transition_' + transitionName + '_leaveTo']"
 	:duration="transitionDuration" appear @after-leave="emit('closed')" @enter="emit('opening')" @after-enter="onOpened"
 >
-	<div v-show="manualShowing != null ? manualShowing : showing" v-hotkey.global="keymap" :class="[$style.root, { [$style.drawer]: type === 'drawer', [$style.dialog]: type === 'dialog' || type === 'dialog:top', [$style.popup]: type === 'popup' }]" :style="{ zIndex, pointerEvents: (manualShowing != null ? manualShowing : showing) ? 'auto' : 'none', '--transformOrigin': transformOrigin }">
-		<div class="_modalBg" :class="[$style.bg, { [$style.bgTransparent]: transparentBg && (type === 'popup') }]" :style="{ zIndex }" @click="onBgClick" @mousedown="onBgClick" @contextmenu.prevent.stop="() => {}"></div>
-		<div ref="content" :class="[$style.content, { [$style.fixed]: fixed, [$style.top]: type === 'dialog:top' }]" :style="{ zIndex }" @click.self="onBgClick">
+	<div v-show="manualShowing != null ? manualShowing : showing" v-hotkey.global="keymap" :class="[$style.root, { [$style.drawer]: type === 'drawer', [$style.dialog]: type === 'dialog', [$style.popup]: type === 'popup' }]" :style="{ zIndex, pointerEvents: (manualShowing != null ? manualShowing : showing) ? 'auto' : 'none', '--transformOrigin': transformOrigin }">
+		<div class="_modalBg data-cy-bg" :class="[$style.bg, { [$style.bgTransparent]: isEnableBgTransparent, 'data-cy-transparent': isEnableBgTransparent }]" :style="{ zIndex }" @click="onBgClick" @mousedown="onBgClick" @contextmenu.prevent.stop="() => {}"></div>
+		<div ref="content" :class="[$style.content, { [$style.fixed]: fixed }]" :style="{ zIndex }" @click.self="onBgClick">
 			<slot :max-height="maxHeight" :type="type"></slot>
 		</div>
 	</div>
@@ -33,7 +33,7 @@ function getFixedContainer(el: Element | null): Element | null {
 	}
 }
 
-type ModalTypes = 'popup' | 'dialog' | 'dialog:top' | 'drawer';
+type ModalTypes = 'popup' | 'dialog' | 'drawer';
 
 const props = withDefaults(defineProps<{
 	manualShowing?: boolean | null;
@@ -82,6 +82,7 @@ const type = $computed<ModalTypes>(() => {
 		return props.preferType!;
 	}
 });
+const isEnableBgTransparent = $computed(() => props.transparentBg && (type === 'popup'));
 let transitionName = $computed((() =>
 	defaultStore.state.animation
 		? useSendAnime
@@ -271,7 +272,7 @@ onMounted(() => {
 		fixed = (type === 'drawer') || (getFixedContainer(props.src) != null);
 
 		await nextTick();
-		
+
 		align();
 	}, { immediate: true });
 
@@ -413,16 +414,6 @@ defineExpose({
 				-webkit-mask-image: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 16px, rgba(0,0,0,1) calc(100% - 16px), rgba(0,0,0,0) 100%);
 				mask-image: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 16px, rgba(0,0,0,1) calc(100% - 16px), rgba(0,0,0,0) 100%);
 			}
-
-			&:global > * {
-				margin: auto;
-			}
-
-			&.top {
-				&:global > * {
-					margin-top: 0;
-				}
-			}
 		}
 	}
 
@@ -450,10 +441,6 @@ defineExpose({
 			left: 0;
 			right: 0;
 			margin: auto;
-
-			&:global > * {
-				margin: auto;
-			}
 		}
 	}
 }
