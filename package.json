@@ -1,7 +1,7 @@
 {
 	"name": "honisskey",
-	"version": "13.0.0-23.01.0",
-	"codename": "indigo",
+	"version": "13.1.0-23.01.1",
+	"codename": "nasubi",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ThinaticSystem/honisskey.git"
@@ -38,7 +38,7 @@
 		"cleanall": "pnpm clean-all"
 	},
 	"resolutions": {
-		"chokidar": "^3.3.1",
+		"chokidar": "^3.5.3",
 		"lodash": "^4.17.21"
 	},
 	"dependencies": {
