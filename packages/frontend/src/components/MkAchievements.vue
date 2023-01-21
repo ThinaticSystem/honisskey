@@ -30,10 +30,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</div>
 				<div :class="$style.description">{{ withDescription ? i18n.ts._achievements._types['_' + achievement.name].description : '???' }}</div>
 				<div v-if="i18n.ts._achievements._types['_' + achievement.name].flavor && withDescription" :class="$style.flavor">{{ i18n.ts._achievements._types['_' + achievement.name].flavor }}</div>
-			</div>
-		</div>
-		<template v-if="withLocked">
-			<div v-for="achievement in lockedAchievements" :key="achievement" :class="[$style.achievement, $style.locked]" class="_panel" @click="achievement === 'clickedClickHere' ? clickHere() : () => {}">
 				<div :class="$style.icon">
 				</div>
 				<div :class="$style.body">

@@ -126,7 +126,7 @@ function showMenu(ev: MouseEvent) {
 
 .sensitive {
 	position: relative;
-	
+
 	&::after {
 		content: "";
 		position: absolute;
