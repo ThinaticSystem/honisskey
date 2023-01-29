@@ -9,7 +9,10 @@
 						<img src="/client-assets/about-icon.png" alt="" class="icon" draggable="false" @load="iconLoaded" @click="gravity"/>
 						<div class="misskey">Misskey</div>
 						<div class="version">v{{ version }}</div>
-						<span v-for="emoji in easterEggEmojis" :key="emoji.id" class="emoji" :data-physics-x="emoji.left" :data-physics-y="emoji.top" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }"><MkEmoji class="emoji" :emoji="emoji.emoji" :is-reaction="false" :normal="true" :no-style="true"/></span>
+						<span v-for="emoji in easterEggEmojis" :key="emoji.id" class="emoji" :data-physics-x="emoji.left" :data-physics-y="emoji.top" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }">
+							<MkCustomEmoji v-if="emoji.emoji[0] === ':'" class="emoji" :name="emoji.emoji" :normal="true" :no-style="true"/>
+							<MkEmoji v-else class="emoji" :emoji="emoji.emoji" :normal="true" :no-style="true"/>
+						</span>
 					</div>
 					<button v-if="thereIsTreasure" class="_button treasure" @click="getTreasure"><img src="/fluent-emoji/1f3c6.png" class="treasureImg"></button>
 				</div>
@@ -40,11 +43,31 @@
 				</FormSection>
 				<FormSection>
 					<template #label>{{ i18n.ts._aboutMisskey.contributors }}</template>
-					<div class="_formLinksGrid">
-						<FormLink to="https://github.com/syuilo" external>@syuilo</FormLink>
-						<FormLink to="https://github.com/tamaina" external>@tamaina</FormLink>
-						<FormLink to="https://github.com/acid-chicken" external>@acid-chicken</FormLink>
-						<FormLink to="https://github.com/rinsuki" external>@rinsuki</FormLink>
+					<div :class="$style.contributors">
+						<a href="https://github.com/syuilo" target="_blank" :class="$style.contributor">
+							<img src="https://avatars.githubusercontent.com/u/4439005?v=4" :class="$style.contributorAvatar">
+							<span :class="$style.contributorUsername">@syuilo</span>
+						</a>
+						<a href="https://github.com/tamaina" target="_blank" :class="$style.contributor">
+							<img src="https://avatars.githubusercontent.com/u/7973572?v=4" :class="$style.contributorAvatar">
+							<span :class="$style.contributorUsername">@tamaina</span>
+						</a>
+						<a href="https://github.com/acid-chicken" target="_blank" :class="$style.contributor">
+							<img src="https://avatars.githubusercontent.com/u/20679825?v=4" :class="$style.contributorAvatar">
+							<span :class="$style.contributorUsername">@acid-chicken</span>
+						</a>
+						<a href="https://github.com/rinsuki" target="_blank" :class="$style.contributor">
+							<img src="https://avatars.githubusercontent.com/u/6533808?v=4" :class="$style.contributorAvatar">
+							<span :class="$style.contributorUsername">@rinsuki</span>
+						</a>
+						<a href="https://github.com/mei23" target="_blank" :class="$style.contributor">
+							<img src="https://avatars.githubusercontent.com/u/30769358?v=4" :class="$style.contributorAvatar">
+							<span :class="$style.contributorUsername">@mei23</span>
+						</a>
+						<a href="https://github.com/robflop" target="_blank" :class="$style.contributor">
+							<img src="https://avatars.githubusercontent.com/u/8159402?v=4" :class="$style.contributorAvatar">
+							<span :class="$style.contributorUsername">@robflop</span>
+						</a>
 					</div>
 					<template #caption><MkLink url="https://github.com/misskey-dev/misskey/graphs/contributors">{{ i18n.ts._aboutMisskey.allContributors }}</MkLink></template>
 				</FormSection>
@@ -293,5 +316,40 @@ definePageMetadata({
 			}
 		}
 	}
+}
+</style>
+
+<style lang="scss" module>
+.contributors {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 12px;
+}
+
+.contributor {
+	display: flex;
+	align-items: center;
+	padding: 12px;
+	background: var(--buttonBg);
+	border-radius: 6px;
+
+	&:hover {
+		text-decoration: none;
+		background: var(--buttonHoverBg);
+	}
+
+	&.active {
+		color: var(--accent);
+		background: var(--buttonHoverBg);
+	}
+}
+
+.contributorAvatar {
+	width: 30px;
+	border-radius: 100%;
+}
+
+.contributorUsername {
+	margin-left: 12px;
 }
 </style>
