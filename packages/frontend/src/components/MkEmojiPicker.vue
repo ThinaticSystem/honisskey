@@ -1,7 +1,6 @@
 <template>
 <div class="omfetrab" :class="['s' + size, 'w' + width, 'h' + height, { asDrawer, asWindow }]" :style="{ maxHeight: maxHeight ? maxHeight + 'px' : undefined }">
-	<input ref="searchEl" :value="q" class="search" data-prevent-emoji-insert :class="{ filled: q != null && q != '' }" :placeholder="i18n.ts.search" type="search" @input="input()" @paste.stop="paste" @keyup.enter="done()">
-	<MkSwitch v-if="props.asReactionPicker" v-model="withRenote" class="withRenote">{{ i18n.ts.reactWithRenote }}</MkSwitch>
+	<input ref="searchEl" :value="q" class="search" data-prevent-emoji-insert :class="{ filled: q != null && q != '' }" :placeholder="i18n.ts.search" type="search" @input="input()" @paste.stop="paste" @keydown.stop.prevent.enter="onEnter">
 	<div ref="emojisEl" class="emojis">
 		<section class="result">
 			<div v-if="searchResultCustom.length > 0" class="body">
@@ -113,12 +112,11 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
-	(ev: 'chosen', v: { reaction: string, withRenote: boolean } | string): void;
+	(ev: 'chosen', v: { reaction: string } | string): void;
 }>();
 
 const searchEl = shallowRef<HTMLInputElement>();
 const emojisEl = shallowRef<HTMLDivElement>();
-const withRenote = shallowRef<boolean>(false);
 
 const {
 	reactions: pinned,
@@ -289,7 +287,6 @@ function focus() {
 function reset() {
 	if (emojisEl.value) emojisEl.value.scrollTop = 0;
 	q.value = '';
-	withRenote.value = false; // 毎回Renoteをfalseに戻す
 }
 
 function getKey(emoji: string | Misskey.entities.CustomEmoji | UnicodeEmojiDef): string {
@@ -306,7 +303,7 @@ function chosen(emoji: any, ev?: MouseEvent) {
 	}
 
 	const key = getKey(emoji);
-	emit('chosen', (props.asReactionPicker) ? { reaction: key, withRenote: withRenote.value } : key);
+	emit('chosen', (props.asReactionPicker) ? { reaction: key } : key);
 
 	// 最近使った絵文字更新
 	if (!pinned.value.includes(key)) {
@@ -329,6 +326,11 @@ function paste(event: ClipboardEvent): void {
 	if (done(pasted)) {
 		event.preventDefault();
 	}
+}
+
+function onEnter(ev: KeyboardEvent) {
+	if (ev.isComposing || ev.key === 'Process' || ev.keyCode === 229) return;
+	done();
 }
 
 function done(query?: string): boolean | void {
@@ -493,9 +495,6 @@ defineExpose({
 		}
 	}
 
-	> .withRenote {
-		padding: 12px;
-	}
 
 	> .tabs {
 		display: flex;
