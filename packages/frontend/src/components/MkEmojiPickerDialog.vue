@@ -51,7 +51,7 @@ const emit = defineEmits<{
 const modal = shallowRef<InstanceType<typeof MkModal>>();
 const picker = shallowRef<InstanceType<typeof MkEmojiPicker>>();
 
-function chosen(results: { reaction: string, withRenote: boolean }) {
+function chosen(results: { reaction: string }) {
 	emit('done', results);
 	modal.value?.close();
 }

@@ -39,7 +39,10 @@
 						</div>
 					</div>
 					<div v-if="user.roles.length > 0" class="roles">
-						<span v-for="role in user.roles" :key="role.id" v-tooltip="role.description" class="role" :style="{ '--color': role.color }">{{ role.name }}</span>
+						<span v-for="role in user.roles" :key="role.id" v-tooltip="role.description" class="role" :style="{ '--color': role.color }">
+							<img v-if="role.iconUrl" style="height: 1.3em; vertical-align: -22%;" :src="role.iconUrl"/>
+							{{ role.name }}
+						</span>
 					</div>
 					<div class="description">
 						<MkOmit>
@@ -98,9 +101,6 @@
 					<XActivity :key="user.id" :user="user"/>
 				</template>
 			</div>
-			<div>
-				<XUserTimeline :user="user"/>
-			</div>
 		</div>
 		<div v-if="!narrow" class="sub _gaps" style="container-type: inline-size;">
 			<XPhotos :key="user.id" :user="user"/>
@@ -114,7 +114,6 @@
 import { defineAsyncComponent, computed, inject, onMounted, onUnmounted, watch } from 'vue';
 import calcAge from 's-age';
 import * as misskey from 'misskey-js';
-import XUserTimeline from './index.timeline.vue';
 import XNote from '@/components/MkNote.vue';
 import MkFollowButton from '@/components/MkFollowButton.vue';
 import MkContainer from '@/components/MkContainer.vue';

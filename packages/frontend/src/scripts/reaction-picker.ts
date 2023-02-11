@@ -4,7 +4,7 @@ import { popup } from '@/os';
 class ReactionPicker {
 	private src: Ref<HTMLElement | null> = ref(null);
 	private manualShowing = ref(false);
-	private onChosen?: ({ reaction: string, withRenote: boolean }) => void;
+	private onChosen?: ({ reaction: string }) => void;
 	private onClosed?: () => void;
 
 	constructor() {
@@ -18,7 +18,7 @@ class ReactionPicker {
 			manualShowing: this.manualShowing,
 		}, {
 			done: results => {
-				this.onChosen!({ reaction: results.reaction, withRenote: results.withRenote });
+				this.onChosen!({ reaction: results.reaction });
 			},
 			close: () => {
 				this.manualShowing.value = false;
