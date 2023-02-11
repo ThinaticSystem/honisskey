@@ -495,7 +495,6 @@ defineExpose({
 		}
 	}
 
-
 	> .tabs {
 		display: flex;
 		display: none;

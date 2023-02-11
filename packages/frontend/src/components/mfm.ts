@@ -12,8 +12,10 @@ import MkSparkle from '@/components/MkSparkle.vue';
 import MkA from '@/components/global/MkA.vue';
 import { host } from '@/config';
 import { MFM_TAGS } from '@/scripts/mfm-tags';
-import { i18n } from '@/i18n';
 import { defaultStore } from '@/store';
+
+import { i18n } from '@/i18n';
+import copyToClipboard from '@/scripts/copy-to-clipboard';
 
 const QUOTE_STYLE = `
 display: block;
@@ -292,6 +294,11 @@ export default defineComponent({
 								icon: 'ti ti-eye-off',
 								text: i18n.ts.mute,
 								action: () => addWordMute(tagWithHash),
+							},
+							{
+								icon: 'ti ti-clipboard-copy',
+								text: i18n.ts.copy,
+								action: () => copyToClipboard(tagWithHash),
 							},
 						],
 						style: 'color:var(--hashtag);',
