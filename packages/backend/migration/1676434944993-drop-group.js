@@ -13,6 +13,7 @@ export class dropGroup1676434944993 {
         await queryRunner.query(`ALTER TABLE "notification" DROP COLUMN "userGroupInvitationId"`);
         await queryRunner.query(`ALTER TYPE "public"."antenna_src_enum" RENAME TO "antenna_src_enum_old"`);
         await queryRunner.query(`CREATE TYPE "public"."antenna_src_enum" AS ENUM('home', 'all', 'users', 'list')`);
+        await queryRunner.query(`DELETE FROM "antenna" WHERE "src"='group'`);
         await queryRunner.query(`ALTER TABLE "antenna" ALTER COLUMN "src" TYPE "public"."antenna_src_enum" USING "src"::"text"::"public"."antenna_src_enum"`);
         await queryRunner.query(`DROP TYPE "public"."antenna_src_enum_old"`);
         await queryRunner.query(`ALTER TABLE "user_profile" ALTER COLUMN "emailNotificationTypes" SET DEFAULT '["follow","receiveFollowRequest"]'`);
