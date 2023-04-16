@@ -22,6 +22,7 @@ export const ACHIEVEMENT_TYPES = [
 	'notes80000',
 	'notes90000',
 	'notes100000',
+	'notes143000',
 	'login3',
 	'login7',
 	'login15',
