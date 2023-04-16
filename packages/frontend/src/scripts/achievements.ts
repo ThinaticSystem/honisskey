@@ -168,7 +168,7 @@ export const ACHIEVEMENT_BADGES = {
 	},
 	'notes143000': {
 		img: '/fluent-emoji/1f9a7.png',
-		bg: 'linear-gradient(0deg, rgb(255 232 119), rgb(255 140 41))',
+		bg: 'linear-gradient(0deg, rgb(119 255 143), rgb(41 130 255))',
 		frame: 'platinum',
 	},
 	'login3': {
