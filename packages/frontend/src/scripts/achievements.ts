@@ -23,6 +23,7 @@ export const ACHIEVEMENT_TYPES = [
 	'notes80000',
 	'notes90000',
 	'notes100000',
+	'notes143000',
 	'login3',
 	'login7',
 	'login15',
@@ -162,6 +163,11 @@ export const ACHIEVEMENT_BADGES = {
 	},
 	'notes100000': {
 		img: '/fluent-emoji/267e.png',
+		bg: 'linear-gradient(0deg, rgb(255 232 119), rgb(255 140 41))',
+		frame: 'platinum',
+	},
+	'notes143000': {
+		img: '/fluent-emoji/1f9a7.png',
 		bg: 'linear-gradient(0deg, rgb(255 232 119), rgb(255 140 41))',
 		frame: 'platinum',
 	},

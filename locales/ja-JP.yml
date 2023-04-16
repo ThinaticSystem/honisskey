@@ -1244,6 +1244,10 @@ _achievements:
       title: "ALL YOUR NOTE ARE BELONG TO US"
       description: "ノートを100,000回投稿した"
       flavor: "そんなに書くことある？"
+    _notes143000:
+      title: "あほくさ"
+      description: "ノートを143,000回投稿した"
+      flavor: "つっかえ！"
     _login3:
       title: "ビギナーⅠ"
       description: "通算ログイン日数が3日"
