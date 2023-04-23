@@ -25,9 +25,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import * as misskey from 'misskey-js';
-import VuePlyr from 'vue-plyr';
+import VuePlyr from '@skjnldsv/vue-plyr';
 import { defaultStore } from '@/store';
-import 'vue-plyr/dist/vue-plyr.css';
+import '@skjnldsv/vue-plyr/dist/vue-plyr.css';
 
 const props = defineProps<{
 	video: misskey.entities.DriveFile;
