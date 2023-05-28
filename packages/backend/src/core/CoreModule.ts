@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AccountMoveService } from './AccountMoveService.js';
 import { AccountUpdateService } from './AccountUpdateService.js';
 import { AiService } from './AiService.js';
 import { AntennaService } from './AntennaService.js';
@@ -38,9 +39,9 @@ import { S3Service } from './S3Service.js';
 import { SignupService } from './SignupService.js';
 import { TwoFactorAuthenticationService } from './TwoFactorAuthenticationService.js';
 import { UserBlockingService } from './UserBlockingService.js';
-import { UserCacheService } from './UserCacheService.js';
+import { CacheService } from './CacheService.js';
 import { UserFollowingService } from './UserFollowingService.js';
-import { UserKeypairStoreService } from './UserKeypairStoreService.js';
+import { UserKeypairService } from './UserKeypairService.js';
 import { UserListService } from './UserListService.js';
 import { UserMutingService } from './UserMutingService.js';
 import { UserSuspendService } from './UserSuspendService.js';
@@ -49,6 +50,7 @@ import { WebhookService } from './WebhookService.js';
 import { ProxyAccountService } from './ProxyAccountService.js';
 import { UtilityService } from './UtilityService.js';
 import { FileInfoService } from './FileInfoService.js';
+import { SearchService } from './SearchService.js';
 import { ChartLoggerService } from './chart/ChartLoggerService.js';
 import FederationChart from './chart/charts/federation.js';
 import NotesChart from './chart/charts/notes.js';
@@ -119,6 +121,7 @@ import type { Provider } from '@nestjs/common';
 
 //#region 文字列ベースでのinjection用(循環参照対応のため)
 const $LoggerService: Provider = { provide: 'LoggerService', useExisting: LoggerService };
+const $AccountMoveService: Provider = { provide: 'AccountMoveService', useExisting: AccountMoveService };
 const $AccountUpdateService: Provider = { provide: 'AccountUpdateService', useExisting: AccountUpdateService };
 const $AiService: Provider = { provide: 'AiService', useExisting: AiService };
 const $AntennaService: Provider = { provide: 'AntennaService', useExisting: AntennaService };
@@ -159,9 +162,9 @@ const $S3Service: Provider = { provide: 'S3Service', useExisting: S3Service };
 const $SignupService: Provider = { provide: 'SignupService', useExisting: SignupService };
 const $TwoFactorAuthenticationService: Provider = { provide: 'TwoFactorAuthenticationService', useExisting: TwoFactorAuthenticationService };
 const $UserBlockingService: Provider = { provide: 'UserBlockingService', useExisting: UserBlockingService };
-const $UserCacheService: Provider = { provide: 'UserCacheService', useExisting: UserCacheService };
+const $CacheService: Provider = { provide: 'CacheService', useExisting: CacheService };
 const $UserFollowingService: Provider = { provide: 'UserFollowingService', useExisting: UserFollowingService };
-const $UserKeypairStoreService: Provider = { provide: 'UserKeypairStoreService', useExisting: UserKeypairStoreService };
+const $UserKeypairService: Provider = { provide: 'UserKeypairService', useExisting: UserKeypairService };
 const $UserListService: Provider = { provide: 'UserListService', useExisting: UserListService };
 const $UserMutingService: Provider = { provide: 'UserMutingService', useExisting: UserMutingService };
 const $UserSuspendService: Provider = { provide: 'UserSuspendService', useExisting: UserSuspendService };
@@ -169,6 +172,8 @@ const $VideoProcessingService: Provider = { provide: 'VideoProcessingService', u
 const $WebhookService: Provider = { provide: 'WebhookService', useExisting: WebhookService };
 const $UtilityService: Provider = { provide: 'UtilityService', useExisting: UtilityService };
 const $FileInfoService: Provider = { provide: 'FileInfoService', useExisting: FileInfoService };
+const $SearchService: Provider = { provide: 'SearchService', useExisting: SearchService };
+
 const $ChartLoggerService: Provider = { provide: 'ChartLoggerService', useExisting: ChartLoggerService };
 const $FederationChart: Provider = { provide: 'FederationChart', useExisting: FederationChart };
 const $NotesChart: Provider = { provide: 'NotesChart', useExisting: NotesChart };
@@ -242,6 +247,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 	],
 	providers: [
 		LoggerService,
+		AccountMoveService,
 		AccountUpdateService,
 		AiService,
 		AntennaService,
@@ -282,9 +288,9 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		SignupService,
 		TwoFactorAuthenticationService,
 		UserBlockingService,
-		UserCacheService,
+		CacheService,
 		UserFollowingService,
-		UserKeypairStoreService,
+		UserKeypairService,
 		UserListService,
 		UserMutingService,
 		UserSuspendService,
@@ -292,6 +298,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		WebhookService,
 		UtilityService,
 		FileInfoService,
+		SearchService,
 		ChartLoggerService,
 		FederationChart,
 		NotesChart,
@@ -359,6 +366,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 
 		//#region 文字列ベースでのinjection用(循環参照対応のため)
 		$LoggerService,
+		$AccountMoveService,
 		$AccountUpdateService,
 		$AiService,
 		$AntennaService,
@@ -399,9 +407,9 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$SignupService,
 		$TwoFactorAuthenticationService,
 		$UserBlockingService,
-		$UserCacheService,
+		$CacheService,
 		$UserFollowingService,
-		$UserKeypairStoreService,
+		$UserKeypairService,
 		$UserListService,
 		$UserMutingService,
 		$UserSuspendService,
@@ -409,6 +417,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$WebhookService,
 		$UtilityService,
 		$FileInfoService,
+		$SearchService,
 		$ChartLoggerService,
 		$FederationChart,
 		$NotesChart,
@@ -477,6 +486,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 	exports: [
 		QueueModule,
 		LoggerService,
+		AccountMoveService,
 		AccountUpdateService,
 		AiService,
 		AntennaService,
@@ -517,9 +527,9 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		SignupService,
 		TwoFactorAuthenticationService,
 		UserBlockingService,
-		UserCacheService,
+		CacheService,
 		UserFollowingService,
-		UserKeypairStoreService,
+		UserKeypairService,
 		UserListService,
 		UserMutingService,
 		UserSuspendService,
@@ -527,6 +537,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		WebhookService,
 		UtilityService,
 		FileInfoService,
+		SearchService,
 		FederationChart,
 		NotesChart,
 		UsersChart,
@@ -593,6 +604,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 
 		//#region 文字列ベースでのinjection用(循環参照対応のため)
 		$LoggerService,
+		$AccountMoveService,
 		$AccountUpdateService,
 		$AiService,
 		$AntennaService,
@@ -633,9 +645,9 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$SignupService,
 		$TwoFactorAuthenticationService,
 		$UserBlockingService,
-		$UserCacheService,
+		$CacheService,
 		$UserFollowingService,
-		$UserKeypairStoreService,
+		$UserKeypairService,
 		$UserListService,
 		$UserMutingService,
 		$UserSuspendService,
@@ -643,6 +655,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$WebhookService,
 		$UtilityService,
 		$FileInfoService,
+		$SearchService,
 		$FederationChart,
 		$NotesChart,
 		$UsersChart,

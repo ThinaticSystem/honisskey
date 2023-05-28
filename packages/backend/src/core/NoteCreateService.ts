@@ -1,7 +1,9 @@
 import { setImmediate } from 'node:timers/promises';
 import * as mfm from 'mfm-js';
 import { In, DataSource } from 'typeorm';
+import * as Redis from 'ioredis';
 import { Inject, Injectable, OnApplicationShutdown } from '@nestjs/common';
+import RE2 from 're2';
 import { extractMentions } from '@/misc/extract-mentions.js';
 import { extractCustomEmojisFromMfm } from '@/misc/extract-custom-emojis-from-mfm.js';
 import { extractHashtags } from '@/misc/extract-hashtags.js';
@@ -19,7 +21,7 @@ import { isDuplicateKeyValueError } from '@/misc/is-duplicate-key-value-error.js
 import { checkWordMute } from '@/misc/check-word-mute.js';
 import type { Channel } from '@/models/entities/Channel.js';
 import { normalizeForSearch } from '@/misc/normalize-for-search.js';
-import { KVCache } from '@/misc/cache.js';
+import { MemorySingleCache } from '@/misc/cache.js';
 import type { UserProfile } from '@/models/entities/UserProfile.js';
 import { RelayService } from '@/core/RelayService.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
@@ -45,8 +47,9 @@ import { bindThis } from '@/decorators.js';
 import { DB_MAX_NOTE_TEXT_LENGTH } from '@/const.js';
 import { RoleService } from '@/core/RoleService.js';
 import { MetaService } from '@/core/MetaService.js';
+import { SearchService } from '@/core/SearchService.js';
 
-const mutedWordsCache = new KVCache<{ userId: UserProfile['userId']; mutedWords: UserProfile['mutedWords']; }[]>(1000 * 60 * 5);
+const mutedWordsCache = new MemorySingleCache<{ userId: UserProfile['userId']; mutedWords: UserProfile['mutedWords']; }[]>(1000 * 60 * 5);
 
 type NotificationType = 'reply' | 'renote' | 'quote' | 'mention';
 
@@ -150,6 +153,9 @@ export class NoteCreateService implements OnApplicationShutdown {
 		@Inject(DI.db)
 		private db: DataSource,
 
+		@Inject(DI.redis)
+		private redisClient: Redis.Redis,
+
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
 
@@ -194,6 +200,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		private apRendererService: ApRendererService,
 		private roleService: RoleService,
 		private metaService: MetaService,
+		private searchService: SearchService,
 		private notesChart: NotesChart,
 		private perUserNotesChart: PerUserNotesChart,
 		private activeUsersChart: ActiveUsersChart,
@@ -232,7 +239,8 @@ export class NoteCreateService implements OnApplicationShutdown {
 		if (data.channel != null) data.localOnly = true;
 
 		if (data.visibility === 'public' && data.channel == null) {
-			if ((data.text != null) && (await this.metaService.fetch()).sensitiveWords.some(w => data.text!.includes(w))) {
+			const sensitiveWords = (await this.metaService.fetch()).sensitiveWords;
+			if (this.isSensitive(data, sensitiveWords)) {
 				data.visibility = 'home';
 			} else if ((await this.roleService.getUserPolicies(user.id)).canPublicNote === false) {
 				data.visibility = 'home';
@@ -320,6 +328,14 @@ export class NoteCreateService implements OnApplicationShutdown {
 		}
 
 		const note = await this.insertNote(user, data, tags, emojis, mentionedUsers);
+
+		if (data.channel) {
+			this.redisClient.xadd(
+				`channelTimeline:${data.channel.id}`,
+				'MAXLEN', '~', '1000',
+				'*',
+				'note', note.id);
+		}
 
 		setImmediate('post created', { signal: this.#shutdownController.signal }).then(
 			() => this.postNoteCreated(note, user, data, silent, tags!, mentionedUsers!),
@@ -461,7 +477,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		this.incNotesCountOfUser(user);
 
 		// Word mute
-		mutedWordsCache.fetch(null, () => this.userProfilesRepository.find({
+		mutedWordsCache.fetch(() => this.userProfilesRepository.find({
 			where: {
 				enableWordMute: true,
 			},
@@ -481,26 +497,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 			}
 		});
 
-		// Antenna
-		for (const antenna of (await this.antennaService.getAntennas())) {
-			this.antennaService.checkHitAntenna(antenna, note, user).then(hit => {
-				if (hit) {
-					this.antennaService.addNoteToAntenna(antenna, note, user);
-				}
-			});
-		}
-
-		// Channel
-		if (note.channelId) {
-			this.channelFollowingsRepository.findBy({ followeeId: note.channelId }).then(followings => {
-				for (const following of followings) {
-					this.noteReadService.insertNoteUnread(following.followerId, note, {
-						isSpecified: false,
-						isMentioned: false,
-					});
-				}
-			});
-		}
+		this.antennaService.addNoteToAntennas(note, user);
 
 		if (data.reply) {
 			this.saveReply(data.reply, note);
@@ -553,6 +550,8 @@ export class NoteCreateService implements OnApplicationShutdown {
 			const noteObj = await this.noteEntityService.pack(note);
 
 			this.globalEventService.publishNotesStream(noteObj);
+
+			this.roleService.addNoteToRoleTimeline(noteObj);
 
 			this.webhookService.getActiveWebhooks().then(webhooks => {
 				webhooks = webhooks.filter(x => x.userId === user.id && x.on.includes('note'));
@@ -673,6 +672,31 @@ export class NoteCreateService implements OnApplicationShutdown {
 		// Register to search database
 		this.index(note);
 	}
+	
+	@bindThis
+	private isSensitive(note: Option, sensitiveWord: string[]): boolean {
+		if (sensitiveWord.length > 0) {
+			const text = note.cw ?? note.text ?? '';
+			if (text === '') return false;
+			const matched = sensitiveWord.some(filter => {
+				// represents RegExp
+				const regexp = filter.match(/^\/(.+)\/(.*)$/);
+				// This should never happen due to input sanitisation.
+				if (!regexp) {
+					const words = filter.split(' ');
+					return words.every(keyword => text.includes(keyword));
+				}
+				try {
+					return new RE2(regexp[1], regexp[2]).test(text);
+				} catch (err) {
+					// This should never happen due to input sanitisation.
+					return false;
+				}
+			});
+			if (matched) return true;
+		}
+		return false;
+	}
 
 	@bindThis
 	private incRenoteCount(renote: Note) {
@@ -733,17 +757,9 @@ export class NoteCreateService implements OnApplicationShutdown {
 
 	@bindThis
 	private index(note: Note) {
-		if (note.text == null || this.config.elasticsearch == null) return;
-		/*
-	es!.index({
-		index: this.config.elasticsearch.index ?? 'misskey_note',
-		id: note.id.toString(),
-		body: {
-			text: normalizeForSearch(note.text),
-			userId: note.userId,
-			userHost: note.userHost,
-		},
-	});*/
+		if (note.text == null && note.cw == null) return;
+		
+		this.searchService.indexNote(note);
 	}
 
 	@bindThis
