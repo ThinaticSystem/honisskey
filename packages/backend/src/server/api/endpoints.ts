@@ -29,6 +29,7 @@ import * as ep___admin_emoji_list from './endpoints/admin/emoji/list.js';
 import * as ep___admin_emoji_removeAliasesBulk from './endpoints/admin/emoji/remove-aliases-bulk.js';
 import * as ep___admin_emoji_setAliasesBulk from './endpoints/admin/emoji/set-aliases-bulk.js';
 import * as ep___admin_emoji_setCategoryBulk from './endpoints/admin/emoji/set-category-bulk.js';
+import * as ep___admin_emoji_setLicenseBulk from './endpoints/admin/emoji/set-license-bulk.js';
 import * as ep___admin_emoji_update from './endpoints/admin/emoji/update.js';
 import * as ep___admin_federation_deleteAllFiles from './endpoints/admin/federation/delete-all-files.js';
 import * as ep___admin_federation_refreshRemoteInstanceMetadata from './endpoints/admin/federation/refresh-remote-instance-metadata.js';
@@ -95,6 +96,10 @@ import * as ep___channels_show from './endpoints/channels/show.js';
 import * as ep___channels_timeline from './endpoints/channels/timeline.js';
 import * as ep___channels_unfollow from './endpoints/channels/unfollow.js';
 import * as ep___channels_update from './endpoints/channels/update.js';
+import * as ep___channels_favorite from './endpoints/channels/favorite.js';
+import * as ep___channels_unfavorite from './endpoints/channels/unfavorite.js';
+import * as ep___channels_myFavorites from './endpoints/channels/my-favorites.js';
+import * as ep___channels_search from './endpoints/channels/search.js';
 import * as ep___charts_activeUsers from './endpoints/charts/active-users.js';
 import * as ep___charts_apRequest from './endpoints/charts/ap-request.js';
 import * as ep___charts_drive from './endpoints/charts/drive.js';
@@ -189,6 +194,7 @@ import * as ep___i_exportMute from './endpoints/i/export-mute.js';
 import * as ep___i_exportNotes from './endpoints/i/export-notes.js';
 import * as ep___i_exportFavorites from './endpoints/i/export-favorites.js';
 import * as ep___i_exportUserLists from './endpoints/i/export-user-lists.js';
+import * as ep___i_exportAntennas from './endpoints/i/export-antennas.js';
 import * as ep___i_favorites from './endpoints/i/favorites.js';
 import * as ep___i_gallery_likes from './endpoints/i/gallery/likes.js';
 import * as ep___i_gallery_posts from './endpoints/i/gallery/posts.js';
@@ -197,6 +203,7 @@ import * as ep___i_importBlocking from './endpoints/i/import-blocking.js';
 import * as ep___i_importFollowing from './endpoints/i/import-following.js';
 import * as ep___i_importMuting from './endpoints/i/import-muting.js';
 import * as ep___i_importUserLists from './endpoints/i/import-user-lists.js';
+import * as ep___i_importAntennas from './endpoints/i/import-antennas.js';
 import * as ep___i_notifications from './endpoints/i/notifications.js';
 import * as ep___i_pageLikes from './endpoints/i/page-likes.js';
 import * as ep___i_pages from './endpoints/i/pages.js';
@@ -217,6 +224,7 @@ import * as ep___i_signinHistory from './endpoints/i/signin-history.js';
 import * as ep___i_unpin from './endpoints/i/unpin.js';
 import * as ep___i_updateEmail from './endpoints/i/update-email.js';
 import * as ep___i_update from './endpoints/i/update.js';
+import * as ep___i_move from './endpoints/i/move.js';
 import * as ep___i_webhooks_create from './endpoints/i/webhooks/create.js';
 import * as ep___i_webhooks_show from './endpoints/i/webhooks/show.js';
 import * as ep___i_webhooks_list from './endpoints/i/webhooks/list.js';
@@ -265,7 +273,6 @@ import * as ep___notes_unrenote from './endpoints/notes/unrenote.js';
 import * as ep___notes_userListTimeline from './endpoints/notes/user-list-timeline.js';
 import * as ep___notifications_create from './endpoints/notifications/create.js';
 import * as ep___notifications_markAllAsRead from './endpoints/notifications/mark-all-as-read.js';
-import * as ep___notifications_read from './endpoints/notifications/read.js';
 import * as ep___pagePush from './endpoints/page-push.js';
 import * as ep___pages_create from './endpoints/pages/create.js';
 import * as ep___pages_delete from './endpoints/pages/delete.js';
@@ -289,6 +296,7 @@ import * as ep___promo_read from './endpoints/promo/read.js';
 import * as ep___roles_list from './endpoints/roles/list.js';
 import * as ep___roles_show from './endpoints/roles/show.js';
 import * as ep___roles_users from './endpoints/roles/users.js';
+import * as ep___roles_notes from './endpoints/roles/notes.js';
 import * as ep___requestResetPassword from './endpoints/request-reset-password.js';
 import * as ep___resetDb from './endpoints/reset-db.js';
 import * as ep___resetPassword from './endpoints/reset-password.js';
@@ -324,6 +332,7 @@ import * as ep___users_search from './endpoints/users/search.js';
 import * as ep___users_show from './endpoints/users/show.js';
 import * as ep___users_stats from './endpoints/users/stats.js';
 import * as ep___users_achievements from './endpoints/users/achievements.js';
+import * as ep___users_updateMemo from './endpoints/users/update-memo.js';
 import * as ep___fetchRss from './endpoints/fetch-rss.js';
 import * as ep___retention from './endpoints/retention.js';
 
@@ -356,6 +365,7 @@ const eps = [
 	['admin/emoji/remove-aliases-bulk', ep___admin_emoji_removeAliasesBulk],
 	['admin/emoji/set-aliases-bulk', ep___admin_emoji_setAliasesBulk],
 	['admin/emoji/set-category-bulk', ep___admin_emoji_setCategoryBulk],
+	['admin/emoji/set-license-bulk', ep___admin_emoji_setLicenseBulk],
 	['admin/emoji/update', ep___admin_emoji_update],
 	['admin/federation/delete-all-files', ep___admin_federation_deleteAllFiles],
 	['admin/federation/refresh-remote-instance-metadata', ep___admin_federation_refreshRemoteInstanceMetadata],
@@ -422,6 +432,10 @@ const eps = [
 	['channels/timeline', ep___channels_timeline],
 	['channels/unfollow', ep___channels_unfollow],
 	['channels/update', ep___channels_update],
+	['channels/favorite', ep___channels_favorite],
+	['channels/unfavorite', ep___channels_unfavorite],
+	['channels/my-favorites', ep___channels_myFavorites],
+	['channels/search', ep___channels_search],
 	['charts/active-users', ep___charts_activeUsers],
 	['charts/ap-request', ep___charts_apRequest],
 	['charts/drive', ep___charts_drive],
@@ -516,6 +530,7 @@ const eps = [
 	['i/export-notes', ep___i_exportNotes],
 	['i/export-favorites', ep___i_exportFavorites],
 	['i/export-user-lists', ep___i_exportUserLists],
+	['i/export-antennas', ep___i_exportAntennas],
 	['i/favorites', ep___i_favorites],
 	['i/gallery/likes', ep___i_gallery_likes],
 	['i/gallery/posts', ep___i_gallery_posts],
@@ -524,6 +539,7 @@ const eps = [
 	['i/import-following', ep___i_importFollowing],
 	['i/import-muting', ep___i_importMuting],
 	['i/import-user-lists', ep___i_importUserLists],
+	['i/import-antennas', ep___i_importAntennas],
 	['i/notifications', ep___i_notifications],
 	['i/page-likes', ep___i_pageLikes],
 	['i/pages', ep___i_pages],
@@ -544,6 +560,7 @@ const eps = [
 	['i/unpin', ep___i_unpin],
 	['i/update-email', ep___i_updateEmail],
 	['i/update', ep___i_update],
+	['i/move', ep___i_move],
 	['i/webhooks/create', ep___i_webhooks_create],
 	['i/webhooks/list', ep___i_webhooks_list],
 	['i/webhooks/show', ep___i_webhooks_show],
@@ -592,7 +609,6 @@ const eps = [
 	['notes/user-list-timeline', ep___notes_userListTimeline],
 	['notifications/create', ep___notifications_create],
 	['notifications/mark-all-as-read', ep___notifications_markAllAsRead],
-	['notifications/read', ep___notifications_read],
 	['page-push', ep___pagePush],
 	['pages/create', ep___pages_create],
 	['pages/delete', ep___pages_delete],
@@ -616,6 +632,7 @@ const eps = [
 	['roles/list', ep___roles_list],
 	['roles/show', ep___roles_show],
 	['roles/users', ep___roles_users],
+	['roles/notes', ep___roles_notes],
 	['request-reset-password', ep___requestResetPassword],
 	['reset-db', ep___resetDb],
 	['reset-password', ep___resetPassword],
@@ -651,6 +668,7 @@ const eps = [
 	['users/show', ep___users_show],
 	['users/stats', ep___users_stats],
 	['users/achievements', ep___users_achievements],
+	['users/update-memo', ep___users_updateMemo],
 	['fetch-rss', ep___fetchRss],
 	['retention', ep___retention],
 ];
@@ -687,6 +705,12 @@ export interface IEndpointMeta {
 	readonly requireAdmin?: boolean;
 
 	readonly requireRolePolicy?: keyof RolePolicies;
+
+	/**
+	 * 引っ越し済みのユーザーによるリクエストを禁止するか
+	 * 省略した場合は false として解釈されます。
+	 */
+	readonly prohibitMoved?: boolean;
 
 	/**
 	 * エンドポイントのリミテーションに関するやつ

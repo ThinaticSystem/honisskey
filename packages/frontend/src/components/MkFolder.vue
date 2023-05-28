@@ -1,8 +1,8 @@
 <template>
-<div ref="rootEl" :class="$style.root">
+<div ref="rootEl" :class="$style.root" role="group" :aria-expanded="opened">
 	<MkStickyContainer>
 		<template #header>
-			<div :class="[$style.header, { [$style.opened]: opened }]" class="_button" @click="toggle">
+			<div :class="[$style.header, { [$style.opened]: opened }]" class="_button" role="button" data-cy-folder-header @click="toggle">
 				<div :class="$style.headerIcon"><slot name="icon"></slot></div>
 				<div :class="$style.headerText">
 					<div :class="$style.headerTextMain">
@@ -20,12 +20,12 @@
 			</div>
 		</template>
 
-		<div v-if="openedAtLeastOnce" :class="[$style.body, { [$style.bgSame]: bgSame }]" :style="{ maxHeight: maxHeight ? `${maxHeight}px` : null, overflow: maxHeight ? `auto` : null }">
+		<div v-if="openedAtLeastOnce" :class="[$style.body, { [$style.bgSame]: bgSame }]" :style="{ maxHeight: maxHeight ? `${maxHeight}px` : null, overflow: maxHeight ? `auto` : null }" :aria-hidden="!opened">
 			<Transition
-				:enter-active-class="$store.state.animation ? $style.transition_toggle_enterActive : ''"
-				:leave-active-class="$store.state.animation ? $style.transition_toggle_leaveActive : ''"
-				:enter-from-class="$store.state.animation ? $style.transition_toggle_enterFrom : ''"
-				:leave-to-class="$store.state.animation ? $style.transition_toggle_leaveTo : ''"
+				:enter-active-class="defaultStore.state.animation ? $style.transition_toggle_enterActive : ''"
+				:leave-active-class="defaultStore.state.animation ? $style.transition_toggle_leaveActive : ''"
+				:enter-from-class="defaultStore.state.animation ? $style.transition_toggle_enterFrom : ''"
+				:leave-to-class="defaultStore.state.animation ? $style.transition_toggle_leaveTo : ''"
 				@enter="enter"
 				@after-enter="afterEnter"
 				@leave="leave"
@@ -46,6 +46,7 @@
 
 <script lang="ts" setup>
 import { nextTick, onMounted } from 'vue';
+import { defaultStore } from '@/store';
 
 const props = withDefaults(defineProps<{
 	defaultOpen?: boolean;
@@ -64,7 +65,7 @@ const getBgColor = (el: HTMLElement) => {
 	}
 };
 
-let rootEl = $ref<HTMLElement>();
+let rootEl = $shallowRef<HTMLElement>();
 let bgSame = $ref(false);
 let opened = $ref(props.defaultOpen);
 let openedAtLeastOnce = $ref(props.defaultOpen);
@@ -195,7 +196,7 @@ onMounted(() => {
 
 .headerRight {
 	margin-left: auto;
-	opacity: 0.7;
+	color: var(--fgTransparentWeak);
 	white-space: nowrap;
 }
 
