@@ -16,6 +16,7 @@ import { FederatedInstanceService } from './FederatedInstanceService.js';
 import { FetchInstanceMetadataService } from './FetchInstanceMetadataService.js';
 import { GlobalEventService } from './GlobalEventService.js';
 import { HashtagService } from './HashtagService.js';
+import { HoniPlugService } from './HoniPlugService.js';
 import { HttpRequestService } from './HttpRequestService.js';
 import { IdService } from './IdService.js';
 import { ImageProcessingService } from './ImageProcessingService.js';
@@ -138,6 +139,7 @@ const $FederatedInstanceService: Provider = { provide: 'FederatedInstanceService
 const $FetchInstanceMetadataService: Provider = { provide: 'FetchInstanceMetadataService', useExisting: FetchInstanceMetadataService };
 const $GlobalEventService: Provider = { provide: 'GlobalEventService', useExisting: GlobalEventService };
 const $HashtagService: Provider = { provide: 'HashtagService', useExisting: HashtagService };
+const $HoniPlugService: Provider = { provide: 'HoniPlugService', useExisting: HoniPlugService };
 const $HttpRequestService: Provider = { provide: 'HttpRequestService', useExisting: HttpRequestService };
 const $IdService: Provider = { provide: 'IdService', useExisting: IdService };
 const $ImageProcessingService: Provider = { provide: 'ImageProcessingService', useExisting: ImageProcessingService };
@@ -264,6 +266,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		FetchInstanceMetadataService,
 		GlobalEventService,
 		HashtagService,
+		HoniPlugService,
 		HttpRequestService,
 		IdService,
 		ImageProcessingService,
@@ -383,6 +386,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$FetchInstanceMetadataService,
 		$GlobalEventService,
 		$HashtagService,
+		$HoniPlugService,
 		$HttpRequestService,
 		$IdService,
 		$ImageProcessingService,
@@ -503,6 +507,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		FetchInstanceMetadataService,
 		GlobalEventService,
 		HashtagService,
+		HoniPlugService,
 		HttpRequestService,
 		IdService,
 		ImageProcessingService,
@@ -621,6 +626,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$FetchInstanceMetadataService,
 		$GlobalEventService,
 		$HashtagService,
+		$HoniPlugService,
 		$HttpRequestService,
 		$IdService,
 		$ImageProcessingService,
