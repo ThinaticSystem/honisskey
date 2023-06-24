@@ -14,21 +14,26 @@ enum UserContentType {
 	Drive,
 }
 
+/**
+ * HoniPlugプラグインのベースクラス
+ *
+ * プラグインを実装する際はこれをextendsする
+ */
 export abstract class HoniPlug {
 	/** プラグインの名前 */
-	name: string;
+	public name: string;
 
 	/**
 	 * 初期化処理
 	 *
 	 * Misskeyの起動時にコールされる
 	 */
-	onInit: () => void
-		= () => { };
+	public onInit: () => void
+		= () => { /* not implemented -> nop */ };
 
 	/** ユーザー投稿コンテンツ(ノートやドライブなど)が作成・変更・削除されたときにコールされる */
-	onUserContent: (content: UserContent) => void
-		= () => { };
+	public onUserContent: (content: UserContent) => void
+		= () => { /* not implemented -> nop */ };
 }
 
 @Injectable()
@@ -39,6 +44,15 @@ export class HoniPlugService {
 		@Inject(DI.config)
 		private config: Config,
 	) { }
+
+	/** Prepare plugins */
+	@bindThis
+	public start(): void {
+		const result = this.#configurePlugins();
+		if (!result) {
+			throw new Error('[HoniPlug] Failed to configure plugins');
+		}
+	}
 
 	/**
 	 * プラグインの準備
@@ -52,8 +66,7 @@ export class HoniPlugService {
 	 *
 	 * @returns true:成功 | false:失敗
 	 */
-	@bindThis
-	public configurePlugins(
+	#configurePlugins(
 		procLoadPlugins = this.#loadPlugins,
 		procInitializePlugins = this.#initializePlugins,
 		objConsole: Pick<typeof console, 'error'> = console,
