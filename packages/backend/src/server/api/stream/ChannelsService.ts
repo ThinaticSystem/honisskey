@@ -5,6 +5,7 @@ import { LocalTimelineChannelService } from './channels/local-timeline.js';
 import { HomeTimelineChannelService } from './channels/home-timeline.js';
 import { GlobalTimelineChannelService } from './channels/global-timeline.js';
 import { MainChannelService } from './channels/main.js';
+import { HoniPlugChannelService } from './channels/honi-plug.js';
 import { ChannelChannelService } from './channels/channel.js';
 import { AdminChannelService } from './channels/admin.js';
 import { ServerStatsChannelService } from './channels/server-stats.js';
@@ -19,6 +20,7 @@ import { RoleTimelineChannelService } from './channels/role-timeline.js';
 export class ChannelsService {
 	constructor(
 		private mainChannelService: MainChannelService,
+		private honiPlugChannelService: HoniPlugChannelService,
 		private homeTimelineChannelService: HomeTimelineChannelService,
 		private localTimelineChannelService: LocalTimelineChannelService,
 		private hybridTimelineChannelService: HybridTimelineChannelService,
@@ -39,6 +41,7 @@ export class ChannelsService {
 	public getChannelService(name: string) {
 		switch (name) {
 			case 'main': return this.mainChannelService;
+			case 'honiPlug': return this.honiPlugChannelService;
 			case 'homeTimeline': return this.homeTimelineChannelService;
 			case 'localTimeline': return this.localTimelineChannelService;
 			case 'hybridTimeline': return this.hybridTimelineChannelService;

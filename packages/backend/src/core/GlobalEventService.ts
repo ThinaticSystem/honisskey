@@ -15,6 +15,7 @@ import type {
 	NoteStreamTypes,
 	UserListStreamTypes,
 	RoleTimelineStreamTypes,
+	HoniPlugStreamTypes,
 } from '@/server/api/stream/types.js';
 import type { Packed } from '@/misc/json-schema.js';
 import { DI } from '@/di-symbols.js';
@@ -96,5 +97,10 @@ export class GlobalEventService {
 	@bindThis
 	public publishAdminStream<K extends keyof AdminStreamTypes>(userId: User['id'], type: K, value?: AdminStreamTypes[K]): void {
 		this.publish(`adminStream:${userId}`, type, typeof value === 'undefined' ? null : value);
+	}
+
+	@bindThis
+	public publishHoniPlugStream<K extends keyof HoniPlugStreamTypes>(type: K, value?: HoniPlugStreamTypes[K]): void {
+		this.publish('honiPlug', type, typeof value === 'undefined' ? null : value);
 	}
 }
