@@ -29,8 +29,10 @@ export abstract class HoniPlug {
 
 	/**
 	 * チャンネル(WebSocket)へ送信する準備が整ったときにコールされる
+	 *
+	 * @param wsPublisher sendWebSocket()をコールするときに使用
 	 */
-	public onWebSocketReady: () => void
+	public onWebSocketReady: (wsPublisher: (data: this['Types']['WebSocketPayLoad']) => void) => void
 		= () => { /* not implemented -> nop */ };
 
 	/////////////////////
@@ -45,19 +47,26 @@ export abstract class HoniPlug {
 	//// API ////
 	/////////////
 
-	#sendWS(data: Parameters<GlobalEventService['publishHoniPlugStream']>[1]): void {
-		this.#_wsPublisher(data);
+	/**
+	 * 
+	 * @param payload WebSocket(チャンネル)へ送信するデータの本文
+	 * @param wsPublisher WebSocket(チャンネル)送信のための関数
+	 *     onWebSocketReady()の引数から取得
+	 */
+	#sendWebSocket(
+		payload: typeof this['Types']['WebSocketPayLoad'],
+		wsPublisher: (data: this['Types']['WebSocketPayLoad']) => void,
+	): void {
+		wsPublisher(payload);
 	}
 
 	//////////////////
 	//// Internal ////
 	//////////////////
 
-	#_wsPublisher: (data: Parameters<GlobalEventService['publishHoniPlugStream']>[1]) => void;
-
-	public _setWebSocketPublisher(publisher: (data: Parameters<GlobalEventService['publishHoniPlugStream']>[1]) => void): void {
-		this.#_wsPublisher = publisher;
-	}
+	Types: {
+		WebSocketPayLoad: Parameters<GlobalEventService['publishHoniPlugStream']>[1];
+	};
 }
 
 interface UserContent {
@@ -171,7 +180,7 @@ export class HoniPlugService {
 		return plugins
 			.map(plugin => {
 				try {
-					plugin._setWebSocketPublisher(
+					plugin.onWebSocketReady(
 						(data: Parameters<GlobalEventService['publishHoniPlugStream']>[1]) =>
 							this.globalEventService.publishHoniPlugStream(plugin.meta.name, data),
 					);
