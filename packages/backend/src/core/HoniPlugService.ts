@@ -60,6 +60,7 @@ enum UserContentType {
 
 @Injectable()
 export class HoniPlugService {
+	/** lateinit: configurePlugins()コール後 */
 	#plugins: HoniPlug[];
 
 	constructor(
@@ -106,7 +107,7 @@ export class HoniPlugService {
 
 			// Initialize plugins
 			const initializeResult = procInitializePlugins(loadedPlugins);
-			const readyPlugins = loadedPlugins.filter((_plugin, index) => initializeResult[index]);
+			const readyPlugins = loadedPlugins.filter((_plugin, index) => initializeResult[index]); // 初期化に成功したプラグインのみの配列にする
 
 			this.#plugins = readyPlugins;
 
@@ -159,6 +160,7 @@ export class HoniPlugService {
 		objConsole: Pick<typeof console, 'error'> = console,
 	): boolean[] {
 		return plugins
+			// 各プラグインの初期化処理を実行し、成功したらtrue | 失敗したらfalseにマップする
 			.map(plugin => {
 				try {
 					plugin.onInit(
