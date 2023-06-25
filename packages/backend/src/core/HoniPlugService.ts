@@ -1,8 +1,24 @@
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import * as fs from 'node:fs/promises';
 import { Inject, Injectable } from '@nestjs/common';
 import { bindThis } from '@/decorators.js';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { GlobalEventService } from './GlobalEventService';
+
+/**
+ * /packages/backend/plugins/ のパス
+ * */
+const pluginsDir = ((): string => {
+	const thisFile = fileURLToPath(import.meta.url); // <- HoniPlugService.ts
+
+	return path.resolve(
+		path.dirname(thisFile), // <- core/
+		'../../', // <- backend/
+		'plugins',
+	);
+})();
 
 /**
  * HoniPlugプラグインのベースクラス
@@ -72,8 +88,8 @@ export class HoniPlugService {
 
 	/** Prepare plugins */
 	@bindThis
-	public start(): void {
-		const result = this.#configurePlugins();
+	public async start(): Promise<void> {
+		const result = await this.#configurePlugins();
 		if (!result) {
 			throw new Error('[HoniPlug] Failed to configure plugins');
 		}
@@ -91,14 +107,14 @@ export class HoniPlugService {
 	 *
 	 * @returns true:成功 | false:失敗
 	 */
-	#configurePlugins(
+	async #configurePlugins(
 		procLoadPlugins = this.#loadPlugins,
 		procInitializePlugins = this.#initializePlugins,
 		objConsole: Pick<typeof console, 'error'> = console,
-	): boolean {
+	): Promise<boolean> {
 		try {
 			// Load plugins
-			const loadedPlugins = procLoadPlugins();
+			const loadedPlugins = await procLoadPlugins();
 			if (!loadedPlugins) {
 				objConsole.error('[HoniPlug] Failed to load plugins');
 
@@ -127,11 +143,35 @@ export class HoniPlugService {
 	 *
 	 * @returns 成功:HoniPlug[] | 失敗:null
 	 */
-	#loadPlugins(
+	async #loadPlugins(
 		objConsole: Pick<typeof console, 'error'> = console,
-	): HoniPlug[] | null {
+	): Promise<HoniPlug[] | null> {
 		try {
-			return [/* TODO */];
+			const filePaths = await (async (): Promise<string[]> => {
+				const directory = await fs.opendir(pluginsDir);
+
+				const filePaths: string[] = [];
+				for await (const dirent of directory) {
+					if (
+						dirent.isFile()
+						&& dirent.name.endsWith('.is')
+					) {
+						filePaths.push(dirent.path);
+					}
+				}
+				return filePaths;
+			})();
+
+			const scripts = filePaths.map(async path => {
+				const buffer = await fs.readFile(path, 'utf8');
+				return buffer.toString();
+			});
+
+			// TODO: - parse
+			//       - interpret
+			//         HoniPlugと接合する (HoniPlugクラスを介してAiScript側のAPIを操作できるようにする)
+
+			return [/* TODO: 読み込んだプラグインと接合したHoniPlugオブジェクト */];
 		} catch (err) {
 			objConsole.error(err);
 
