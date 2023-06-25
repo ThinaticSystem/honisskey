@@ -23,16 +23,19 @@ export abstract class HoniPlug {
 	 * 初期化処理
 	 *
 	 * Misskeyの起動時にコールされる
-	 */
-	public onInit: () => void
-		= () => { /* not implemented -> nop */ };
-
-	/**
-	 * チャンネル(WebSocket)へ送信する準備が整ったときにコールされる
 	 *
-	 * @param wsPublisher WebSocket(チャンネル)を送信する関数
+	 * @param apis API関数群
 	 */
-	public onWebSocketReady: (wsPublisher: (data: this['Types']['WebSocketPayLoad']) => void) => void
+	public onInit: (
+		apis: {
+			/**
+			 * WebSocket(チャンネル)を送信する関数
+			 *
+			 * @param payload: WebSocketへ送信するデータ本文
+			 */
+			wsPublisher: (payload: Parameters<GlobalEventService['publishHoniPlugStream']>[1]) => void
+		},
+	) => void
 		= () => { /* not implemented -> nop */ };
 
 	/////////////////////
@@ -42,18 +45,6 @@ export abstract class HoniPlug {
 	/** ユーザー投稿コンテンツ(ノートやドライブなど)が作成・変更・削除されたときにコールされる */
 	public onUserContent: (content: UserContent) => void
 		= () => { /* not implemented -> nop */ };
-
-	/////////////
-	//// API ////
-	/////////////
-
-	//////////////////
-	//// Internal ////
-	//////////////////
-
-	Types: {
-		WebSocketPayLoad: Parameters<GlobalEventService['publishHoniPlugStream']>[1];
-	};
 }
 
 interface UserContent {
@@ -154,6 +145,8 @@ export class HoniPlugService {
 	 *
 	 * @param plugins プラグインの配列
 	 *
+	 * @param procPublishHoniPlugStream side-effects:
+	 *     - カリー化して各プラグインに注入
 	 * @param objConsole side-effects:
 	 *     - 失敗時にerrorをコール
 	 *
@@ -162,17 +155,18 @@ export class HoniPlugService {
 	#initializePlugins(
 		plugins: HoniPlug[],
 
+		procPublishHoniPlugStream = this.globalEventService.publishHoniPlugStream,
 		objConsole: Pick<typeof console, 'error'> = console,
 	): boolean[] {
 		return plugins
 			.map(plugin => {
 				try {
-					plugin.onWebSocketReady(
-						(data: Parameters<GlobalEventService['publishHoniPlugStream']>[1]) =>
-							this.globalEventService.publishHoniPlugStream(plugin.meta.name, data),
+					plugin.onInit(
+						{ // apis
+							wsPublisher: (data: Parameters<GlobalEventService['publishHoniPlugStream']>[1]) =>
+								procPublishHoniPlugStream(plugin.meta.name, data),
+						},
 					);
-
-					plugin.onInit();
 
 					return true;
 				} catch (err) {
