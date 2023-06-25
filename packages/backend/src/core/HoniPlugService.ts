@@ -30,7 +30,7 @@ export abstract class HoniPlug {
 	/**
 	 * チャンネル(WebSocket)へ送信する準備が整ったときにコールされる
 	 *
-	 * @param wsPublisher sendWebSocket()をコールするときに使用
+	 * @param wsPublisher WebSocket(チャンネル)を送信する関数
 	 */
 	public onWebSocketReady: (wsPublisher: (data: this['Types']['WebSocketPayLoad']) => void) => void
 		= () => { /* not implemented -> nop */ };
@@ -46,19 +46,6 @@ export abstract class HoniPlug {
 	/////////////
 	//// API ////
 	/////////////
-
-	/**
-	 * 
-	 * @param payload WebSocket(チャンネル)へ送信するデータの本文
-	 * @param wsPublisher WebSocket(チャンネル)送信のための関数
-	 *     onWebSocketReady()の引数から取得
-	 */
-	#sendWebSocket(
-		payload: typeof this['Types']['WebSocketPayLoad'],
-		wsPublisher: (data: this['Types']['WebSocketPayLoad']) => void,
-	): void {
-		wsPublisher(payload);
-	}
 
 	//////////////////
 	//// Internal ////
