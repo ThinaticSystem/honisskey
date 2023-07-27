@@ -47,18 +47,8 @@ export function createAiScriptEnv(opts) {
 			utils.assertString(key);
 			return utils.jsToVal(JSON.parse(miLocalStorage.getItem(`aiscript:${opts.storageKey}:${key.value}`)));
 		}),
-		'Mk:fetch': values.FN_NATIVE(async ([resource, init]) => {
-			utils.assertString(resource);
-			const response = init ? await fetch(resource.value, utils.valToJs(init)) : await fetch(resource.value);
-			const returnObject = {
-				status: response.status,
-				headers: new Object(),
-				body: await response.text(),
-			};
-			response.headers.forEach((value, key) => {
-				returnObject.headers[key] = value;
-			});
-			return utils.jsToVal(returnObject);
+		'Mk:url': values.FN_NATIVE(() => {
+			return values.STR(window.location.href);
 		}),
 	};
 }
