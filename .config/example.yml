@@ -219,3 +219,6 @@ signToActivityPubGet: true
 
 # PID File of master process
 #pidFile: /tmp/misskey.pid
+# Server commands (uncomment💩 to enable)
+serverCommands:
+  #reboot: /usr/sbin/reboot
