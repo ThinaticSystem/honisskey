@@ -84,13 +84,11 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 						const quote = (speech: string): string =>
 							`rebootCmd:${speech}`;
 						logger.error(quote(err.message));
-						reject(err);
+						reject(new ApiError(meta.errors.rebootFailed));
 					} else {
 						resolve();
 					}
 				});
-			}).catch(() => {
-				throw new ApiError(meta.errors.rebootFailed);
 			});
 
 			logger.info('I put server to sleep.');
