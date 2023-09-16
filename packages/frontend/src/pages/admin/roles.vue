@@ -43,6 +43,14 @@
 							</MkSwitch>
 						</MkFolder>
 
+						<MkFolder v-if="matchQuery([i18n.ts._role._options.canBapServer, 'canBapServer'])">
+							<template #label>{{ i18n.ts._role._options.canBapServer }}</template>
+							<template #suffix>{{ policies.canBapServer ? i18n.ts.yes : i18n.ts.no }}</template>
+							<MkSwitch v-model="policies.canBapServer">
+								<template #label>{{ i18n.ts.enable }}</template>
+							</MkSwitch>
+						</MkFolder>
+
 						<MkFolder v-if="matchQuery([i18n.ts._role._options.canInvite, 'canInvite'])">
 							<template #label>{{ i18n.ts._role._options.canInvite }}</template>
 							<template #suffix>{{ policies.canInvite ? i18n.ts.yes : i18n.ts.no }}</template>
@@ -57,7 +65,7 @@
 							<MkInput v-model="policies.inviteLimit" type="number">
 							</MkInput>
 						</MkFolder>
-						
+
 						<MkFolder v-if="matchQuery([i18n.ts._role._options.inviteLimitCycle, 'inviteLimitCycle'])">
 							<template #label>{{ i18n.ts._role._options.inviteLimitCycle }}</template>
 							<template #suffix>{{ policies.inviteLimitCycle + i18n.ts._time.minute }}</template>
