@@ -1,13 +1,13 @@
+import { exec } from 'node:child_process';
 import { Inject, Injectable } from '@nestjs/common';
+import ms from 'ms';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import type { Schema } from '@/misc/json-schema.js';
-import { IEndpointMeta } from '../../endpoints.js';
 import { Endpoint } from '@/server/api/endpoint-base.js';
+import { IEndpointMeta } from '../../endpoints.js';
 import { ApiError } from '../../error.js';
-import ms from 'ms';
-import { exec } from 'node:child_process';
 
 export const meta = {
 	stability: 'experimental',
@@ -39,11 +39,11 @@ export const meta = {
 
 	prohibitMoved: true,
 
-	// limit: {
-	// duration: ms('1days'),
-	// max: 3,
-	// minInterval: ms('1hours'),
-	// },
+	limit: {
+		duration: ms('1days'),
+		max: 3,
+		minInterval: ms('1hours'),
+	},
 
 	description: 'Reboot Honisskey server.',
 } as const satisfies IEndpointMeta;
@@ -68,15 +68,14 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 
 			const rebootCommand = this.config.serverCommands?.reboot;
 			if (!rebootCommand) {
+				logger.warn('Reboot command is not registered in config');
 				throw new ApiError(meta.errors.unsupportedServerOperation);
 			}
 
 			await new Promise<void>((resolve, reject) => {
-				exec(rebootCommand, (err, _stdout, _stderr) => {
+				exec(rebootCommand, (err) => {
 					if (err) {
-						logger.debug(`Reboot command (${rebootCommand}): --------`);
-						logger.error(err.message);
-						logger.debug('----------------');
+						logger.error(`Reboot command (${rebootCommand}): --------\n${err.message}\n----------------`);
 						reject(new ApiError(meta.errors.rebootFailed));
 					} else {
 						resolve();
