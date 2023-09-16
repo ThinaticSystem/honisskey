@@ -160,6 +160,9 @@ export interface AdminStreamTypes {
 		comment: string;
 	};
 }
+
+type PluginName = string;
+export type HoniPlugStreamTypes = Record<PluginName, Record<string | number | symbol, unknown>>;
 //#endregion
 
 // 辞書(interface or type)から{ type, body }ユニオンを定義
@@ -228,6 +231,10 @@ export type StreamMessages = {
 	notes: {
 		name: 'notesStream';
 		payload: Serialized<Packed<'Note'>>;
+	};
+	honiPlug: {
+		name: 'honiPlug';
+		payload: EventUnionFromDictionary<SerializedAll<HoniPlugStreamTypes>>;
 	};
 };
 

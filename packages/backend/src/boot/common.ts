@@ -3,6 +3,7 @@ import { ChartManagementService } from '@/core/chart/ChartManagementService.js';
 import { QueueProcessorService } from '@/queue/QueueProcessorService.js';
 import { NestLogger } from '@/NestLogger.js';
 import { QueueProcessorModule } from '@/queue/QueueProcessorModule.js';
+import { HoniPlugService } from '@/core/HoniPlugService';
 import { JanitorService } from '@/daemons/JanitorService.js';
 import { QueueStatsService } from '@/daemons/QueueStatsService.js';
 import { ServerStatsService } from '@/daemons/ServerStatsService.js';
@@ -14,6 +15,8 @@ export async function server() {
 		logger: new NestLogger(),
 	});
 	app.enableShutdownHooks();
+
+	app.get(HoniPlugService).start();
 
 	const serverService = app.get(ServerService);
 	await serverService.launch();
