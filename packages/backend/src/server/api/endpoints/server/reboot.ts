@@ -1,11 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import ms from 'ms';
-import { Endpoint } from '@/server/api/endpoint-base.js';
-import type { Schema } from '@/misc/json-schema.js';
 import { DI } from '@/di-symbols.js';
+import type { Config } from '@/config.js';
 import type { UsersRepository } from '@/models/index.js';
+import { LoggerService } from '@/core/LoggerService.js';
+import type { Schema } from '@/misc/json-schema.js';
 import { IEndpointMeta } from '../../endpoints.js';
+import { Endpoint } from '@/server/api/endpoint-base.js';
 import { ApiError } from '../../error.js';
+import ms from 'ms';
+import { exec } from 'node:child_process';
 
 export const meta = {
 	stability: 'experimental',
@@ -17,6 +20,11 @@ export const meta = {
 			message: 'The operation you requested is not supported on this server.',
 			code: 'UNSUPPORTED_SERVER_OPERATION',
 			id: '113e048e-badf-4c9c-98d8-cce1b9574cd4',
+		},
+		rebootFailed: {
+			message: 'Reboot command was failed.',
+			code: 'REBOOT_FAILED',
+			id: 'a63b549f-6e98-45e6-b9fb-9ebe25014672',
 		},
 	},
 
@@ -32,11 +40,11 @@ export const meta = {
 
 	prohibitMoved: true,
 
-	limit: {
-		duration: ms('1days'),
-		max: 3,
-		minInterval: ms('1hours'),
-	},
+	// limit: {
+		// duration: ms('1days'),
+		// max: 3,
+		// minInterval: ms('1hours'),
+	// },
 
 	description: 'Reboot Honisskey server.',
 } as const satisfies IEndpointMeta;
@@ -51,15 +59,42 @@ export const paramDef = {
 @Injectable()
 export default class extends Endpoint<typeof meta, typeof paramDef> {
 	constructor(
+		@Inject(DI.config)
+		private config: Config,
+
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
+
+		private loggerService: LoggerService,
 	) {
 		super(meta, paramDef, async (ps, _me) => {
-			const me = _me ? await this.usersRepository.findOneByOrFail({ id: _me.id }) : null;
+			const logger = this.loggerService.getLogger('server');
+
+			// const me = _me ? await this.usersRepository.findOneByOrFail({ id: _me.id }) : null;
 			// TODO: RoleServiceでロールを参照してだめユーザーだったらエラーを流す
-			if (true/* TODO: .config/の記載を見てチェック */) {
+
+			const rebootCommand = this.config.serverCommands?.reboot;
+			if (!rebootCommand) {
 				throw new ApiError(meta.errors.unsupportedServerOperation);
 			}
+
+			await new Promise<void>((resolve, reject) => {
+				exec(rebootCommand, (err, _stdout, _stderr) => {
+					if (err) {
+						const quote = (speech: string): string =>
+							`rebootCmd:${speech}`;
+						logger.error(quote(err.message));
+						reject(err);
+					} else {
+						resolve();
+					}
+				});
+			}).catch(() => {
+				throw new ApiError(meta.errors.rebootFailed);
+			});
+
+			logger.info('I put server to sleep.');
+
 			return 'ok';
 		});
 	}

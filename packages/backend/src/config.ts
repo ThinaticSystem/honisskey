@@ -87,6 +87,10 @@ export type Source = {
 	videoThumbnailGenerator?: string;
 
 	signToActivityPubGet?: boolean;
+
+	serverCommands?: {
+		reboot?: string;
+	};
 };
 
 /**
