@@ -205,4 +205,4 @@ signToActivityPubGet: true
 
 # Server commands (uncomment💩 to enable)
 serverCommands:
-  #reboot: /usr/sbin/reboot
+  #reboot: sudo /usr/sbin/reboot
