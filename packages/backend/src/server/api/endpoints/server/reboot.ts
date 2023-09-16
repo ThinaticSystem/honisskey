@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
-import type { UsersRepository } from '@/models/index.js';
 import { LoggerService } from '@/core/LoggerService.js';
 import type { Schema } from '@/misc/json-schema.js';
 import { IEndpointMeta } from '../../endpoints.js';
@@ -36,14 +35,14 @@ export const meta = {
 
 	requireCredential: true,
 
-	/* requireRolePolicy: 'TODO: 足す', */
+	requireRolePolicy: 'canBapServer',
 
 	prohibitMoved: true,
 
 	// limit: {
-		// duration: ms('1days'),
-		// max: 3,
-		// minInterval: ms('1hours'),
+	// duration: ms('1days'),
+	// max: 3,
+	// minInterval: ms('1hours'),
 	// },
 
 	description: 'Reboot Honisskey server.',
@@ -62,16 +61,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 		@Inject(DI.config)
 		private config: Config,
 
-		@Inject(DI.usersRepository)
-		private usersRepository: UsersRepository,
-
 		private loggerService: LoggerService,
 	) {
-		super(meta, paramDef, async (ps, _me) => {
+		super(meta, paramDef, async () => {
 			const logger = this.loggerService.getLogger('server');
-
-			// const me = _me ? await this.usersRepository.findOneByOrFail({ id: _me.id }) : null;
-			// TODO: RoleServiceでロールを参照してだめユーザーだったらエラーを流す
 
 			const rebootCommand = this.config.serverCommands?.reboot;
 			if (!rebootCommand) {
