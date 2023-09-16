@@ -29,8 +29,8 @@ export const meta = {
 
 	res: {
 		type: 'string',
-		example: 'ok',
-		enum: ['ok'],
+		example: 'You are lucky.',
+		enum: ['You are lucky.'],
 	},
 
 	requireCredential: true,
@@ -83,9 +83,11 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 				});
 			});
 
+			// 恐らくここでもうプロセスが終了されている
+
 			logger.info('I put server to sleep.');
 
-			return 'ok';
+			return 'You are lucky.';
 		});
 	}
 }
