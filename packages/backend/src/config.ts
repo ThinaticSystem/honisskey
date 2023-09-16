@@ -91,6 +91,9 @@ type Source = {
 	perUserNotificationsMaxCount?: number;
 	deactivateAntennaThreshold?: number;
 	pidFile: string;
+	serverCommands?: {
+		reboot?: string;
+	};
 };
 
 export type Config = {
