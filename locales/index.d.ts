@@ -1551,6 +1551,7 @@ export interface Locale {
             "gtlAvailable": string;
             "ltlAvailable": string;
             "canPublicNote": string;
+            "canBapServer": string;
             "canInvite": string;
             "inviteLimit": string;
             "inviteLimitCycle": string;

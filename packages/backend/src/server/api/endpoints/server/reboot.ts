@@ -81,9 +81,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 			await new Promise<void>((resolve, reject) => {
 				exec(rebootCommand, (err, _stdout, _stderr) => {
 					if (err) {
-						const quote = (speech: string): string =>
-							`rebootCmd:${speech}`;
-						logger.error(quote(err.message));
+						logger.debug(`Reboot command (${rebootCommand}): --------`);
+						logger.error(err.message);
+						logger.debug('----------------');
 						reject(new ApiError(meta.errors.rebootFailed));
 					} else {
 						resolve();

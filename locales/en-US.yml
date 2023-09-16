@@ -1012,6 +1012,7 @@ _role:
     ltlAvailable: "Can view the local timeline"
     canPublicNote: "Can send public notes"
     canInvite: "Create instance invite codes"
+    canBapServer: "Can execute server commands"
     canManageCustomEmojis: "Manage Custom Emojis"
     driveCapacity: "Drive capacity"
     alwaysMarkNsfw: "Always mark files as NSFW"
