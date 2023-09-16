@@ -221,4 +221,4 @@ signToActivityPubGet: true
 #pidFile: /tmp/misskey.pid
 # Server commands (uncomment💩 to enable)
 serverCommands:
-  #reboot: /usr/sbin/reboot
+  #reboot: sudo /usr/sbin/reboot
