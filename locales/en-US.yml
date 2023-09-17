@@ -975,6 +975,7 @@ assign: "Assign"
 unassign: "Unassign"
 color: "Color"
 manageCustomEmojis: "Manage Custom Emojis"
+manageServer: "Manage Server"
 youCannotCreateAnymore: "You've hit the creation limit."
 cannotPerformTemporary: "Temporarily unavailable"
 cannotPerformTemporaryDescription: "This action cannot be performed temporarily due to exceeding the execution limit. Please wait for a while and then try again."
@@ -1681,3 +1682,7 @@ _fileViewer:
   uploadedAt: "Uploaded at"
   attachedNotes: "Attached notes"
   thisPageCanBeSeenFromTheAuthor: "This page can only be seen by the user who uploaded this file."
+
+_serverManager:
+  reboot: 'Reboot'
+  rebootServer: 'Reboot server'

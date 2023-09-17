@@ -975,6 +975,7 @@ assign: "アサイン"
 unassign: "アサインを解除"
 color: "色"
 manageCustomEmojis: "カスタム絵文字の管理"
+manageServer: "サーバーの管理"
 youCannotCreateAnymore: "これ以上作成することはできません。"
 cannotPerformTemporary: "一時的に利用できません"
 cannotPerformTemporaryDescription: "操作回数が制限を超過するため一時的に利用できません。しばらく時間を置いてから再度お試しください。"
@@ -2217,3 +2218,7 @@ _fileViewer:
   uploadedAt: "追加日"
   attachedNotes: "添付されているノート"
   thisPageCanBeSeenFromTheAuthor: "このページは、このファイルをアップロードしたユーザーしか閲覧できません。"
+
+_serverManager:
+  reboot: '再起動'
+  rebootServer: 'サーバーを再起動します'

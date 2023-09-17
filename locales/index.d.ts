@@ -978,6 +978,7 @@ export interface Locale {
     "unassign": string;
     "color": string;
     "manageCustomEmojis": string;
+    "manageServer": string;
     "youCannotCreateAnymore": string;
     "cannotPerformTemporary": string;
     "cannotPerformTemporaryDescription": string;
@@ -2291,6 +2292,9 @@ export interface Locale {
         "createAd": string;
         "deleteAd": string;
         "updateAd": string;
+    "_serverManager": {
+        "reboot": string;
+        "rebootServer": string;
     };
     "_fileViewer": {
         "title": string;
