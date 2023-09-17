@@ -588,6 +588,8 @@ export type Endpoints = {
 	// server-info
 	'server-info': { req: NoParams; res: ServerInfo; };
 
+	'server/reboot': { req: NoParams; res: never; };
+
 	// sw
 	'sw/register': { req: TODO; res: TODO; };
 

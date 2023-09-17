@@ -2025,6 +2025,10 @@ export type Endpoints = {
         req: NoParams;
         res: ServerInfo;
     };
+    'server/reboot': {
+        req: NoParams;
+        res: never;
+    };
     'sw/register': {
         req: TODO;
         res: TODO;
