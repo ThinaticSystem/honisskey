@@ -967,6 +967,7 @@ assign: "Assign"
 unassign: "Unassign"
 color: "Color"
 manageCustomEmojis: "Manage Custom Emojis"
+manageServer: "Manage Server"
 youCannotCreateAnymore: "You've hit the creation limit."
 cannotPerformTemporary: "Temporarily unavailable"
 cannotPerformTemporaryDescription: "This action cannot be performed temporarily due to exceeding the execution limit. Please wait for a while and then try again."
@@ -2035,3 +2036,7 @@ _webhookSettings:
     renote: "When renoted"
     reaction: "When receiving a reaction"
     mention: "When being mentioned"
+
+_serverManager:
+  reboot: 'Reboot'
+  rebootServer: 'Reboot server'

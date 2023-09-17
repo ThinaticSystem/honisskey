@@ -970,6 +970,7 @@ export interface Locale {
     "unassign": string;
     "color": string;
     "manageCustomEmojis": string;
+    "manageServer": string;
     "youCannotCreateAnymore": string;
     "cannotPerformTemporary": string;
     "cannotPerformTemporaryDescription": string;
@@ -2185,6 +2186,10 @@ export interface Locale {
             "reaction": string;
             "mention": string;
         };
+    };
+    "_serverManager": {
+        "reboot": string;
+        "rebootServer": string;
     };
 }
 declare const locales: {
