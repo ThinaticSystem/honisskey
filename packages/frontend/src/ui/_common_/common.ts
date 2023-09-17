@@ -62,7 +62,7 @@ export function openInstanceMenu(ev: MouseEvent) {
 			to: '/custom-emojis-manager',
 			text: i18n.ts.manageCustomEmojis,
 			icon: 'ti ti-icons',
-		} : undefined, ($i && $i.policies.canBapServer) ? {
+		} : undefined, ($i && ($i.isAdmin || $i.policies.canBapServer)) ? {
 			type: 'link',
 			to: '/server-manager',
 			text: i18n.ts.manageServer,
