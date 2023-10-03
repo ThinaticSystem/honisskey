@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: syuilo and other misskey contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import { Module } from '@nestjs/common';
 
 import { CoreModule } from '@/core/CoreModule.js';
@@ -155,6 +160,7 @@ import * as ep___federation_users from './endpoints/federation/users.js';
 import * as ep___federation_stats from './endpoints/federation/stats.js';
 import * as ep___following_create from './endpoints/following/create.js';
 import * as ep___following_delete from './endpoints/following/delete.js';
+import * as ep___following_update from './endpoints/following/update.js';
 import * as ep___following_invalidate from './endpoints/following/invalidate.js';
 import * as ep___following_requests_accept from './endpoints/following/requests/accept.js';
 import * as ep___following_requests_cancel from './endpoints/following/requests/cancel.js';
@@ -199,7 +205,6 @@ import * as ep___i_exportAntennas from './endpoints/i/export-antennas.js';
 import * as ep___i_favorites from './endpoints/i/favorites.js';
 import * as ep___i_gallery_likes from './endpoints/i/gallery/likes.js';
 import * as ep___i_gallery_posts from './endpoints/i/gallery/posts.js';
-import * as ep___i_getWordMutedNotesCount from './endpoints/i/get-word-muted-notes-count.js';
 import * as ep___i_importBlocking from './endpoints/i/import-blocking.js';
 import * as ep___i_importFollowing from './endpoints/i/import-following.js';
 import * as ep___i_importMuting from './endpoints/i/import-muting.js';
@@ -252,6 +257,7 @@ import * as ep___notes_clips from './endpoints/notes/clips.js';
 import * as ep___notes_conversation from './endpoints/notes/conversation.js';
 import * as ep___notes_create from './endpoints/notes/create.js';
 import * as ep___notes_delete from './endpoints/notes/delete.js';
+import * as ep___notes_update from './endpoints/notes/update.js';
 import * as ep___notes_favorites_create from './endpoints/notes/favorites/create.js';
 import * as ep___notes_favorites_delete from './endpoints/notes/favorites/delete.js';
 import * as ep___notes_featured from './endpoints/notes/featured.js';
@@ -278,6 +284,7 @@ import * as ep___notes_unrenote from './endpoints/notes/unrenote.js';
 import * as ep___notes_userListTimeline from './endpoints/notes/user-list-timeline.js';
 import * as ep___notifications_create from './endpoints/notifications/create.js';
 import * as ep___notifications_markAllAsRead from './endpoints/notifications/mark-all-as-read.js';
+import * as ep___notifications_testNotification from './endpoints/notifications/test-notification.js';
 import * as ep___pagePush from './endpoints/page-push.js';
 import * as ep___pages_create from './endpoints/pages/create.js';
 import * as ep___pages_delete from './endpoints/pages/delete.js';
@@ -329,9 +336,12 @@ import * as ep___users_lists_show from './endpoints/users/lists/show.js';
 import * as ep___users_lists_update from './endpoints/users/lists/update.js';
 import * as ep___users_lists_favorite from './endpoints/users/lists/favorite.js';
 import * as ep___users_lists_unfavorite from './endpoints/users/lists/unfavorite.js';
-import * as ep___users_lists_create_from_public from './endpoints/users/lists/create-from-public.js';
+import * as ep___users_lists_createFromPublic from './endpoints/users/lists/create-from-public.js';
+import * as ep___users_lists_updateMembership from './endpoints/users/lists/update-membership.js';
+import * as ep___users_lists_getMemberships from './endpoints/users/lists/get-memberships.js';
 import * as ep___users_notes from './endpoints/users/notes.js';
 import * as ep___users_pages from './endpoints/users/pages.js';
+import * as ep___users_flashs from './endpoints/users/flashs.js';
 import * as ep___users_reactions from './endpoints/users/reactions.js';
 import * as ep___users_recommendation from './endpoints/users/recommendation.js';
 import * as ep___users_relation from './endpoints/users/relation.js';
@@ -501,6 +511,7 @@ const $federation_users: Provider = { provide: 'ep:federation/users', useClass: 
 const $federation_stats: Provider = { provide: 'ep:federation/stats', useClass: ep___federation_stats.default };
 const $following_create: Provider = { provide: 'ep:following/create', useClass: ep___following_create.default };
 const $following_delete: Provider = { provide: 'ep:following/delete', useClass: ep___following_delete.default };
+const $following_update: Provider = { provide: 'ep:following/update', useClass: ep___following_update.default };
 const $following_invalidate: Provider = { provide: 'ep:following/invalidate', useClass: ep___following_invalidate.default };
 const $following_requests_accept: Provider = { provide: 'ep:following/requests/accept', useClass: ep___following_requests_accept.default };
 const $following_requests_cancel: Provider = { provide: 'ep:following/requests/cancel', useClass: ep___following_requests_cancel.default };
@@ -545,7 +556,6 @@ const $i_exportAntennas: Provider = { provide: 'ep:i/export-antennas', useClass:
 const $i_favorites: Provider = { provide: 'ep:i/favorites', useClass: ep___i_favorites.default };
 const $i_gallery_likes: Provider = { provide: 'ep:i/gallery/likes', useClass: ep___i_gallery_likes.default };
 const $i_gallery_posts: Provider = { provide: 'ep:i/gallery/posts', useClass: ep___i_gallery_posts.default };
-const $i_getWordMutedNotesCount: Provider = { provide: 'ep:i/get-word-muted-notes-count', useClass: ep___i_getWordMutedNotesCount.default };
 const $i_importBlocking: Provider = { provide: 'ep:i/import-blocking', useClass: ep___i_importBlocking.default };
 const $i_importFollowing: Provider = { provide: 'ep:i/import-following', useClass: ep___i_importFollowing.default };
 const $i_importMuting: Provider = { provide: 'ep:i/import-muting', useClass: ep___i_importMuting.default };
@@ -598,6 +608,7 @@ const $notes_clips: Provider = { provide: 'ep:notes/clips', useClass: ep___notes
 const $notes_conversation: Provider = { provide: 'ep:notes/conversation', useClass: ep___notes_conversation.default };
 const $notes_create: Provider = { provide: 'ep:notes/create', useClass: ep___notes_create.default };
 const $notes_delete: Provider = { provide: 'ep:notes/delete', useClass: ep___notes_delete.default };
+const $notes_update: Provider = { provide: 'ep:notes/update', useClass: ep___notes_update.default };
 const $notes_favorites_create: Provider = { provide: 'ep:notes/favorites/create', useClass: ep___notes_favorites_create.default };
 const $notes_favorites_delete: Provider = { provide: 'ep:notes/favorites/delete', useClass: ep___notes_favorites_delete.default };
 const $notes_featured: Provider = { provide: 'ep:notes/featured', useClass: ep___notes_featured.default };
@@ -624,6 +635,7 @@ const $notes_unrenote: Provider = { provide: 'ep:notes/unrenote', useClass: ep__
 const $notes_userListTimeline: Provider = { provide: 'ep:notes/user-list-timeline', useClass: ep___notes_userListTimeline.default };
 const $notifications_create: Provider = { provide: 'ep:notifications/create', useClass: ep___notifications_create.default };
 const $notifications_markAllAsRead: Provider = { provide: 'ep:notifications/mark-all-as-read', useClass: ep___notifications_markAllAsRead.default };
+const $notifications_testNotification: Provider = { provide: 'ep:notifications/test-notification', useClass: ep___notifications_testNotification.default };
 const $pagePush: Provider = { provide: 'ep:page-push', useClass: ep___pagePush.default };
 const $pages_create: Provider = { provide: 'ep:pages/create', useClass: ep___pages_create.default };
 const $pages_delete: Provider = { provide: 'ep:pages/delete', useClass: ep___pages_delete.default };
@@ -675,9 +687,12 @@ const $users_lists_show: Provider = { provide: 'ep:users/lists/show', useClass: 
 const $users_lists_update: Provider = { provide: 'ep:users/lists/update', useClass: ep___users_lists_update.default };
 const $users_lists_favorite: Provider = { provide: 'ep:users/lists/favorite', useClass: ep___users_lists_favorite.default };
 const $users_lists_unfavorite: Provider = { provide: 'ep:users/lists/unfavorite', useClass: ep___users_lists_unfavorite.default };
-const $users_lists_create_from_public: Provider = { provide: 'ep:users/lists/create-from-public', useClass: ep___users_lists_create_from_public.default };
+const $users_lists_createFromPublic: Provider = { provide: 'ep:users/lists/create-from-public', useClass: ep___users_lists_createFromPublic.default };
+const $users_lists_updateMembership: Provider = { provide: 'ep:users/lists/update-membership', useClass: ep___users_lists_updateMembership.default };
+const $users_lists_getMemberships: Provider = { provide: 'ep:users/lists/get-memberships', useClass: ep___users_lists_getMemberships.default };
 const $users_notes: Provider = { provide: 'ep:users/notes', useClass: ep___users_notes.default };
 const $users_pages: Provider = { provide: 'ep:users/pages', useClass: ep___users_pages.default };
+const $users_flashs: Provider = { provide: 'ep:users/flashs', useClass: ep___users_flashs.default };
 const $users_reactions: Provider = { provide: 'ep:users/reactions', useClass: ep___users_reactions.default };
 const $users_recommendation: Provider = { provide: 'ep:users/recommendation', useClass: ep___users_recommendation.default };
 const $users_relation: Provider = { provide: 'ep:users/relation', useClass: ep___users_relation.default };
@@ -851,6 +866,7 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$federation_stats,
 		$following_create,
 		$following_delete,
+		$following_update,
 		$following_invalidate,
 		$following_requests_accept,
 		$following_requests_cancel,
@@ -895,7 +911,6 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$i_favorites,
 		$i_gallery_likes,
 		$i_gallery_posts,
-		$i_getWordMutedNotesCount,
 		$i_importBlocking,
 		$i_importFollowing,
 		$i_importMuting,
@@ -948,6 +963,7 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$notes_conversation,
 		$notes_create,
 		$notes_delete,
+		$notes_update,
 		$notes_favorites_create,
 		$notes_favorites_delete,
 		$notes_featured,
@@ -974,6 +990,7 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$notes_userListTimeline,
 		$notifications_create,
 		$notifications_markAllAsRead,
+		$notifications_testNotification,
 		$pagePush,
 		$pages_create,
 		$pages_delete,
@@ -1025,9 +1042,12 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$users_lists_update,
 		$users_lists_favorite,
 		$users_lists_unfavorite,
-		$users_lists_create_from_public,
+		$users_lists_createFromPublic,
+		$users_lists_updateMembership,
+		$users_lists_getMemberships,
 		$users_notes,
 		$users_pages,
+		$users_flashs,
 		$users_reactions,
 		$users_recommendation,
 		$users_relation,
@@ -1195,6 +1215,7 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$federation_stats,
 		$following_create,
 		$following_delete,
+		$following_update,
 		$following_invalidate,
 		$following_requests_accept,
 		$following_requests_cancel,
@@ -1239,7 +1260,6 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$i_favorites,
 		$i_gallery_likes,
 		$i_gallery_posts,
-		$i_getWordMutedNotesCount,
 		$i_importBlocking,
 		$i_importFollowing,
 		$i_importMuting,
@@ -1292,6 +1312,7 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$notes_conversation,
 		$notes_create,
 		$notes_delete,
+		$notes_update,
 		$notes_favorites_create,
 		$notes_favorites_delete,
 		$notes_featured,
@@ -1367,9 +1388,12 @@ const $retention: Provider = { provide: 'ep:retention', useClass: ep___retention
 		$users_lists_update,
 		$users_lists_favorite,
 		$users_lists_unfavorite,
-		$users_lists_create_from_public,
+		$users_lists_createFromPublic,
+		$users_lists_updateMembership,
+		$users_lists_getMemberships,
 		$users_notes,
 		$users_pages,
+		$users_flashs,
 		$users_reactions,
 		$users_recommendation,
 		$users_relation,

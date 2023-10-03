@@ -1,9 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: syuilo and other misskey contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 import * as assert from 'node:assert';
 import { readFile } from 'node:fs/promises';
 import { isAbsolute, basename } from 'node:path';
 import { inspect } from 'node:util';
 import WebSocket, { ClientOptions } from 'ws';
-import fetch, { Blob, File, RequestInit } from 'node-fetch';
+import fetch, { File, RequestInit } from 'node-fetch';
 import { DataSource } from 'typeorm';
 import { JSDOM } from 'jsdom';
 import { DEFAULT_POLICIES } from '@/core/RoleService.js';
@@ -90,13 +95,21 @@ const request = async (path: string, params: any, me?: UserToken): Promise<{ sta
 	};
 };
 
-const relativeFetch = async (path: string, init?: RequestInit | undefined) => {
+export const relativeFetch = async (path: string, init?: RequestInit | undefined) => {
 	return await fetch(new URL(path, `http://127.0.0.1:${port}/`).toString(), init);
 };
 
+function randomString(chars = 'abcdefghijklmnopqrstuvwxyz0123456789', length = 16) {
+	let randomString = '';
+	for (let i = 0; i < length; i++) {
+		randomString += chars[Math.floor(Math.random() * chars.length)];
+	}
+	return randomString;
+}
+
 export const signup = async (params?: Partial<misskey.Endpoints['signup']['req']>): Promise<NonNullable<misskey.Endpoints['signup']['res']>> => {
 	const q = Object.assign({
-		username: 'test',
+		username: randomString(),
 		password: 'test',
 	}, params);
 
