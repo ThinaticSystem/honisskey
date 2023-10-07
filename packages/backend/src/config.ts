@@ -169,9 +169,7 @@ export type Config = {
 	perChannelMaxNoteCacheCount: number;
 	perUserNotificationsMaxCount: number;
 	deactivateAntennaThreshold: number;
-	serverCommands: {
-		reboot?: string;
-	};
+	serverCommands: Source['serverCommands'];
 	pidFile: string;
 };
 
