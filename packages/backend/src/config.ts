@@ -169,6 +169,9 @@ export type Config = {
 	perChannelMaxNoteCacheCount: number;
 	perUserNotificationsMaxCount: number;
 	deactivateAntennaThreshold: number;
+	serverCommands: {
+		reboot?: string;
+	};
 	pidFile: string;
 };
 
@@ -263,6 +266,7 @@ export function loadConfig(): Config {
 		perChannelMaxNoteCacheCount: config.perChannelMaxNoteCacheCount ?? 1000,
 		perUserNotificationsMaxCount: config.perUserNotificationsMaxCount ?? 300,
 		deactivateAntennaThreshold: config.deactivateAntennaThreshold ?? (1000 * 60 * 60 * 24 * 7),
+		serverCommands: config.serverCommands ?? {},
 		pidFile: config.pidFile,
 	};
 }
