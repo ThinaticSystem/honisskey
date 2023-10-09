@@ -7,7 +7,6 @@ export function nyaize(text: string): string {
 	return text
 		// ja-JP
 		.replaceAll('な', 'にゃ').replaceAll('ナ', 'ニャ').replaceAll('ﾅ', 'ﾆｬ')
-		.replace(/(?<=こ)んにち[は|わ]/g, 'にゃにゃちわ').replace(/(?<=コ)ンニチ[ハ|ワ]/g, 'ニャニャチワ').replace(/(?<=ｺ)ﾝﾆﾁ[ﾊ|ﾜ]/g, 'ﾆｬﾆｬﾁﾜ')
 		// en-US
 		.replace(/(?<=n)a/gi, x => x === 'A' ? 'YA' : 'ya')
 		.replace(/(?<=morn)ing/gi, x => x === 'ING' ? 'YAN' : 'yan')

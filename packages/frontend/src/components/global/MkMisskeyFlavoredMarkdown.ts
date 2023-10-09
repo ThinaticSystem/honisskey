@@ -17,6 +17,8 @@ import MkSparkle from '@/components/MkSparkle.vue';
 import MkA from '@/components/global/MkA.vue';
 import { host } from '@/config.js';
 import { defaultStore } from '@/store.js';
+import { i18n } from '@/i18n.js';
+import copyToClipboard from '@/scripts/copy-to-clipboard.js';
 
 const QUOTE_STYLE = `
 display: block;
@@ -272,9 +274,26 @@ export default function(props: {
 			}
 
 			case 'hashtag': {
+				const tagWithHash = `#${token.props.hashtag}`;
 				return [h(MkA, {
 					key: Math.random(),
 					to: isNote ? `/tags/${encodeURIComponent(token.props.hashtag)}` : `/user-tags/${encodeURIComponent(token.props.hashtag)}`,
+					additionalContextmenuItems: [
+						{
+							type: 'label',
+							text: tagWithHash,
+						},
+						{
+							icon: 'ti ti-eye-off',
+							text: i18n.ts.mute,
+							action: () => addWordMute(tagWithHash),
+						},
+						{
+							icon: 'ti ti-clipboard-copy',
+							text: i18n.ts.copy,
+							action: () => copyToClipboard(tagWithHash),
+						},
+					],
 					style: 'color:var(--hashtag);',
 				}, `#${token.props.hashtag}`)];
 			}
@@ -375,3 +394,8 @@ export default function(props: {
 		style: props.nowrap ? 'white-space: pre; word-wrap: normal; overflow: hidden; text-overflow: ellipsis;' : 'white-space: pre-wrap;',
 	}, genEl(ast, props.rootScale ?? 1));
 }
+
+const addWordMute = (word: string): void => {
+	const mutedWords = defaultStore.state.mutedWords;
+	defaultStore.set('mutedWords', [...mutedWords, [word]]);
+};

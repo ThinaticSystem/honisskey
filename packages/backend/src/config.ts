@@ -87,13 +87,14 @@ type Source = {
 
 	signToActivityPubGet?: boolean;
 
+	serverCommands?: {
+		reboot?: string;
+	};
+
 	perChannelMaxNoteCacheCount?: number;
 	perUserNotificationsMaxCount?: number;
 	deactivateAntennaThreshold?: number;
 	pidFile: string;
-	serverCommands?: {
-		reboot?: string;
-	};
 };
 
 export type Config = {

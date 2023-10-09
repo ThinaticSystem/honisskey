@@ -15,14 +15,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import * as misskey from 'misskey-js';
+import * as Misskey from 'misskey-js';
+import { onMounted } from 'vue';
 import MkMiniChart from '@/components/MkMiniChart.vue';
 import * as os from '@/os.js';
 import { acct } from '@/filters/user.js';
 
-const props = defineProps<{
-	user: misskey.entities.User;
-}>();
+const props = withDefaults(defineProps<{
+	user: Misskey.entities.User;
+	withChart: boolean;
+}>(), {
+	withChart: true,
+});
 
 let chartValues = $ref<number[] | null>(null);
 

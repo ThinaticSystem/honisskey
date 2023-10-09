@@ -32,11 +32,6 @@
 		renderError('FORCED_ERROR', 'This error is forced by having forceError in local storage.')
 	}
 
-	let forceError = localStorage.getItem('forceError');
-	if (forceError != null) {
-		renderError('FORCED_ERROR', 'This error is forced by having forceError in local storage.')
-	}
-
 	//#region Detect language & fetch translations
 	if (!localStorage.hasOwnProperty('locale')) {
 		const supportedLangs = LANGS;
@@ -50,6 +45,7 @@
 				// Fallback
 				if (lang == null) lang = 'en-US';
 			}
+			lang = lang === 'ja-JP' ? 'ja-HN' : lang;
 		}
 
 		const metaRes = await window.fetch('/api/meta', {

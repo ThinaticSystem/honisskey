@@ -69,15 +69,6 @@ export async function masterMain() {
 		process.exit(1);
 	}
 
-	const app = await NestFactory.createApplicationContext(MainModule, {
-		logger: new NestLogger(),
-	});
-	app.enableShutdownHooks();
-
-	// start server
-	const serverService = app.get(ServerService);
-	serverService.launch();
-
 	bootLogger.succ('Misskey initialized');
 
 	if (envOption.disableClustering) {

@@ -1263,6 +1263,11 @@ export interface Locale {
                 "description": string;
                 "flavor": string;
             };
+            "_notes143000": {
+                "title": string;
+                "description": string;
+                "flavor": string;
+            };
             "_login3": {
                 "title": string;
                 "description": string;
@@ -2292,6 +2297,7 @@ export interface Locale {
         "createAd": string;
         "deleteAd": string;
         "updateAd": string;
+    };
     "_serverManager": {
         "reboot": string;
         "rebootServer": string;
