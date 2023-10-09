@@ -377,7 +377,7 @@ function react(viaKeyboard = false): void {
 		reactionPicker.show(reactButton.value, reaction => {
 			os.api('notes/reactions/create', {
 				noteId: appearNote.id,
-				reaction: reaction.reaction,
+				reaction: reaction,
 			});
 			if (appearNote.text && appearNote.text.length > 100 && (Date.now() - new Date(appearNote.createdAt).getTime() < 1000 * 3)) {
 				claimAchievement('reactWithoutRead');
