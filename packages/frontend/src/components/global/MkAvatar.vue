@@ -82,7 +82,7 @@ watch(() => props.user.avatarBlurhash, () => {
 	immediate: true,
 });
 
-const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
+const contextmenuItem = (user: Misskey.entities.User): MenuItem[] => [
 	{
 		type: 'label',
 		text: '@' + user.username + (user.host !== null ? `@${user.host}` : ''),
@@ -107,7 +107,7 @@ const contextmenuItem = (user: misskey.entities.User): MenuItem[] => [
 		},
 	},
 ];
-async function toggleMute(user: misskey.entities.User): Promise<void> {
+async function toggleMute(user: Misskey.entities.User): Promise<void> {
 	const { canceled, result: period } = await os.select({
 		title: i18n.ts.mutePeriod,
 		items: [{
