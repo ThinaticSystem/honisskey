@@ -395,7 +395,7 @@ export default function(props: {
 	}, genEl(ast, props.rootScale ?? 1));
 }
 
+/** TODO ミュートの仕様が安定したら実装 */
 const addWordMute = (word: string): void => {
-	const mutedWords = defaultStore.state.mutedWords;
-	defaultStore.set('mutedWords', [...mutedWords, [word]]);
+	throw new Error('Not Implemented: ミュートの仕様変更されそうなので安定次第実装');
 };
